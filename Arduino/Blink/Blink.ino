@@ -8,6 +8,8 @@
 void setup() {                
   // initialize the digital pin as an output.
   // Pin 13 has an LED connected on most Arduino boards:
+
+  // 13pinには1kΩの抵抗が入っているので直接つないでもOK
   pinMode(13, OUTPUT);     
 }
 
