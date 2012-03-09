@@ -15,6 +15,8 @@
  
  This example code is in the public domain.
  
+ 9pinを使うのは、PWMが使えるから。今度は330Ωの抵抗をちゃんと入れる
+
  */
 
 
