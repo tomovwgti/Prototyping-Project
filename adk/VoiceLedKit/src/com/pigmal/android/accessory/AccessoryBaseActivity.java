@@ -121,7 +121,6 @@ public class AccessoryBaseActivity extends Activity {
     public void onResume() {
         super.onResume();
 
-        // Intent intent = getIntent();
         if (mOpenAccessory.isConnected()) {
             return;
         }
@@ -149,8 +148,8 @@ public class AccessoryBaseActivity extends Activity {
 
     @Override
     public void onPause() {
-        mOpenAccessory.close();
-        mUsbAccessory = null;
+        // mOpenAccessory.close();
+        // mUsbAccessory = null;
         super.onPause();
     }
 

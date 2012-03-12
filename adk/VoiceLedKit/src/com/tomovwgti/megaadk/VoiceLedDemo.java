@@ -42,7 +42,6 @@ public class VoiceLedDemo extends AccessoryBaseActivity {
         super.onCreate(savedInstanceState);
 
         mReceiver = new ADKCommandReceiver();
-        // mOpenAccessory.setListener(mReceiver);
 
         if (mOpenAccessory.isConnected()) {
             showControls();
@@ -118,7 +117,7 @@ public class VoiceLedDemo extends AccessoryBaseActivity {
             for (int i = 0; i < results.size(); i++) {
                 // ここでは、文字列が複数あった場合に結合しています
                 if (results.get(i).equals(RESULT_STRING)) {
-                    mOutputController.setBalse();
+                    mOutputController.setBalse(true);
                     Toast.makeText(this, results.get(i), Toast.LENGTH_LONG).show();
                     return;
                 }

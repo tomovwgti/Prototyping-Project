@@ -89,7 +89,7 @@ public class Accessory implements Runnable {
 
     public boolean isConnected() {
         // return true;
-        return mInputStream != null && mOutputStream != null;
+        return mInputStream != null || mOutputStream != null;
     }
 
     /**

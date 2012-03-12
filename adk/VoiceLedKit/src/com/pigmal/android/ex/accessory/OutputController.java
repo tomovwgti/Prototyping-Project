@@ -37,6 +37,7 @@ import com.tomovwgti.megaadk.VoiceLedDemo;
 public class OutputController {
     private static final String TAG = OutputController.class.getSimpleName();
     private Button balseButton;
+    private Button offButton;
 
     private Activity hostActivity;
     private ADKCommandSender adkSender;
@@ -47,6 +48,13 @@ public class OutputController {
 
         balseButton = (Button) findViewById(R.id.balse);
         balseButton.setOnClickListener(balseListener);
+        offButton = (Button) findViewById(R.id.off);
+        offButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setBalse(false);
+            }
+        });
     }
 
     OnClickListener balseListener = new OnClickListener() {
@@ -73,7 +81,7 @@ public class OutputController {
         return hostActivity.findViewById(id);
     }
 
-    public void setBalse() {
-        adkSender.balseSequence();
+    public void setBalse(boolean flag) {
+        adkSender.balseSequence(flag);
     }
 }
