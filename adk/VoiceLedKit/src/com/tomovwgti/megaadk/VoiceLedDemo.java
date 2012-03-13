@@ -18,21 +18,22 @@ package com.tomovwgti.megaadk;
 
 import java.util.ArrayList;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.pigmal.android.accessory.AccessoryBaseActivity;
-import com.pigmal.android.ex.accessory.ADKCommandReceiver;
 import com.pigmal.android.ex.accessory.OutputController;
-import com.pigmal.android.util.Logger;
 
 public class VoiceLedDemo extends AccessoryBaseActivity {
     private static final String TAG = VoiceLedDemo.class.getSimpleName();
-    private ADKCommandReceiver mReceiver;
     public static final int REQUEST_CODE = 0;
 
     private OutputController mOutputController;
@@ -40,8 +41,6 @@ public class VoiceLedDemo extends AccessoryBaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mReceiver = new ADKCommandReceiver();
 
         if (mOpenAccessory.isConnected()) {
             showControls();
@@ -62,7 +61,34 @@ public class VoiceLedDemo extends AccessoryBaseActivity {
     private void showControls() {
         setContentView(R.layout.main);
 
-        mOutputController = new OutputController(this, mOpenAccessory);
+        mOutputController = new OutputController(mOpenAccessory);
+
+        Button balseButton = (Button) findViewById(R.id.balse);
+        balseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    // インテント作成
+                    Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                    intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "VoiceRecognitionTest");
+                    // インテント発行
+                    startActivityForResult(intent, VoiceLedDemo.REQUEST_CODE);
+                } catch (ActivityNotFoundException e) {
+                    // このインテントに応答できるアクティビティがインストールされていない場合
+                    Toast.makeText(v.getContext(), "ActivityNotFoundException", Toast.LENGTH_LONG)
+                            .show();
+                }
+            }
+        });
+        Button offButton = (Button) findViewById(R.id.off);
+        offButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOutputController.setBalse(false);
+            }
+        });
     }
 
     /**
@@ -75,13 +101,13 @@ public class VoiceLedDemo extends AccessoryBaseActivity {
 
     @Override
     protected void onUsbAtached() {
-        Logger.v("onUsbAtached");
+        Log.v(TAG, "onUsbAtached");
         showControls();
     }
 
     @Override
     protected void onUsbDetached() {
-        Logger.v("onUsbDetached");
+        Log.v(TAG, "onUsbDetached");
         hideControls();
     }
 
