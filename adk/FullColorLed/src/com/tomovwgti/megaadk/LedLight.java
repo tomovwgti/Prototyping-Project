@@ -1,8 +1,6 @@
 
 package com.tomovwgti.megaadk;
 
-import android.util.Log;
-
 import com.pigmal.android.ex.accessory.ADKCommandSender;
 import com.pigmal.android.ex.accessory.OutputData;
 
@@ -28,7 +26,6 @@ public class LedLight extends OutputData {
 
     @Override
     public void sendData() {
-        Log.i(TAG, LED_COMMAND + " " + RED_LED + " " + red);
         mSender.sendCommand(LED_COMMAND, RED_LED, red);
         mSender.sendCommand(LED_COMMAND, GREEN_LED, green);
         mSender.sendCommand(LED_COMMAND, BLUE_LED, blue);
