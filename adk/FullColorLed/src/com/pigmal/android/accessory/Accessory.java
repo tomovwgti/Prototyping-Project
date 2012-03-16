@@ -63,7 +63,7 @@ public class Accessory implements Runnable {
             mOutputStream = new FileOutputStream(fd);
             Thread thread = new Thread(null, this, "DemoKit");
             thread.start();
-            Log.d(TAG, "accessory opened");
+            Log.d(TAG, "accessory opened " + mOutputStream);
             // enableControls(true);
             ret = true;
         } else {
@@ -76,6 +76,7 @@ public class Accessory implements Runnable {
      * close Open Accessory Device
      */
     /* package */void close() {
+        Log.d(TAG, "accessory close-------------------------");
         try {
             if (mFileDescriptor != null) {
                 mFileDescriptor.close();
@@ -90,8 +91,7 @@ public class Accessory implements Runnable {
     }
 
     public boolean isConnected() {
-        // return true;
-        return mInputStream != null || mOutputStream != null;
+        return mInputStream != null && mOutputStream != null;
     }
 
     /**
@@ -135,8 +135,10 @@ public class Accessory implements Runnable {
     }
 
     public void write(byte... data) {
+        Log.i(TAG, "mOutputStream " + mOutputStream);
         if (mOutputStream != null) {
             try {
+                Log.i(TAG, "data write");
                 mOutputStream.write(data);
             } catch (IOException e) {
                 e.printStackTrace();

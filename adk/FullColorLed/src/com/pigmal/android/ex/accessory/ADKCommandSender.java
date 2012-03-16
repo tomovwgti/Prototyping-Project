@@ -24,14 +24,26 @@ import com.pigmal.android.accessory.Accessory;
  * @author itog
  */
 public class ADKCommandSender {
-    static final String TAG = "ADKCommandSender";
+    private static final String TAG = ADKCommandSender.class.getSimpleName();
 
-    public static final byte LED_COMMAND = 2;
-
+    private ADKCommandSender mSender = null;
     private Accessory openAccessory;
 
     public ADKCommandSender(Accessory acc) {
         openAccessory = acc;
+    }
+
+    /**
+     * 取得
+     * 
+     * @return
+     */
+    public ADKCommandSender getSender() {
+        return mSender;
+    }
+
+    public void sendData(OutputData out) {
+        out.sendData();
     }
 
     /**
@@ -41,16 +53,12 @@ public class ADKCommandSender {
      * @param target
      * @param value
      */
-    private void sendCommand(byte command, byte target, int value) {
+    public void sendCommand(byte command, byte target, int value) {
         if (value > 255)
             value = 255;
 
         if (target != -1) {
             openAccessory.write(command, target, (byte) value);
         }
-    }
-
-    public void sendLEDcommand(int which, int value) {
-        sendCommand(LED_COMMAND, (byte) which, (byte) value);
     }
 }
