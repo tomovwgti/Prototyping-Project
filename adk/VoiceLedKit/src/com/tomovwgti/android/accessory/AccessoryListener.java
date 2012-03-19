@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pigmal.android.accessory;
+package com.tomovwgti.android.accessory;
 
 /**
  * A listener to listen to the data from ADK

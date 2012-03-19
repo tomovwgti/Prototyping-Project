@@ -46,7 +46,7 @@ public class FullColorLedActivity extends AccessoryBaseActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 mRedText.setText("RED : " + progress);
                 mLed.red = progress;
-                mSender.sendData(mLed);
+                mLed.sendData();
             }
 
             @Override
@@ -66,7 +66,7 @@ public class FullColorLedActivity extends AccessoryBaseActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 mGreenText.setText("GREEN : " + progress);
                 mLed.green = progress;
-                mSender.sendData(mLed);
+                mLed.sendData();
             }
 
             @Override
@@ -85,7 +85,7 @@ public class FullColorLedActivity extends AccessoryBaseActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 mBlueText.setText("BLUE : " + progress);
                 mLed.blue = progress;
-                mSender.sendData(mLed);
+                mLed.sendData();
             }
 
             @Override

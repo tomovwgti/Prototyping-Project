@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pigmal.android.accessory;
+package com.tomovwgti.android.accessory;
 
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -24,31 +24,38 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.android.future.usb.UsbAccessory;
 import com.android.future.usb.UsbManager;
+import com.tomovwgti.android.accessory.io.ADKCommandSender;
 
-public class AccessoryBaseActivity extends Activity {
+public abstract class AccessoryBaseActivity extends Activity {
     private static final String TAG = AccessoryBaseActivity.class.getSimpleName();
 
-    private static final String ACTION_USB_PERMISSION = "com.tomovwgti.android.VoiceLedKit.action.USB_PERMISSION";
+    private static final String ACTION_USB_PERMISSION = "com.tomovwgti.android.action.USB_PERMISSION";
 
     private PendingIntent mPermissionIntent;
     private boolean mPermissionRequestPending;
     private UsbManager mUsbManager;
     private UsbAccessory mUsbAccessory;
-    protected Accessory mOpenAccessory;
+    private Accessory mOpenAccessory;
+
+    private ADKCommandSender mSender;
 
     /**
      * nofity USB is atached
      */
     protected void onUsbAtached() {
+        showControls();
     };
 
     /**
      * nofity USB is detached
      */
     protected void onUsbDetached() {
+        hideControls();
     };
 
     private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
@@ -105,6 +112,15 @@ public class AccessoryBaseActivity extends Activity {
             mOpenAccessory.open(mUsbAccessory);
             onUsbAtached();
         }
+
+        // Command Sender
+        mSender = new ADKCommandSender(mOpenAccessory);
+
+        if (mOpenAccessory.isConnected()) {
+            showControls();
+        } else {
+            hideControls();
+        }
     }
 
     @Override
@@ -147,6 +163,7 @@ public class AccessoryBaseActivity extends Activity {
 
     @Override
     public void onPause() {
+        // mSender = null;
         // mOpenAccessory.close();
         // mUsbAccessory = null;
         super.onPause();
@@ -155,6 +172,34 @@ public class AccessoryBaseActivity extends Activity {
     @Override
     public void onDestroy() {
         unregisterReceiver(mUsbReceiver);
+        mOpenAccessory.removeListener();
         super.onDestroy();
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getTitle().equals("Simulate")) {
+            showControls();
+        } else if (item.getTitle().equals("Quit")) {
+            finish();
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add("Simulate");
+        menu.add("Quit");
+        return true;
+    }
+
+    /**
+     * Menu ADK is connected
+     */
+    abstract protected void showControls();
+
+    /**
+     * Menu ADK is not connected
+     */
+    abstract protected void hideControls();
 }

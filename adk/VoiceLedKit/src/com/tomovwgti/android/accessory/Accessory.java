@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pigmal.android.accessory;
+package com.tomovwgti.android.accessory;
 
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
@@ -53,7 +53,7 @@ public class Accessory implements Runnable {
      * @param accessory UsbAccessory
      * @return
      */
-    /* package */boolean open(UsbAccessory accessory) {
+    boolean open(UsbAccessory accessory) {
         boolean ret = false;
         mFileDescriptor = mUsbManager.openAccessory(accessory);
         if (mFileDescriptor != null) {
@@ -75,7 +75,8 @@ public class Accessory implements Runnable {
     /**
      * close Open Accessory Device
      */
-    /* package */void close() {
+    void close() {
+        Log.d(TAG, "accessory close");
         try {
             if (mFileDescriptor != null) {
                 mFileDescriptor.close();
@@ -90,8 +91,7 @@ public class Accessory implements Runnable {
     }
 
     public boolean isConnected() {
-        // return true;
-        return mInputStream != null || mOutputStream != null;
+        return mInputStream != null && mOutputStream != null;
     }
 
     /**
@@ -137,6 +137,7 @@ public class Accessory implements Runnable {
     public void write(byte... data) {
         if (mOutputStream != null) {
             try {
+                Log.i(TAG, "data write");
                 mOutputStream.write(data);
             } catch (IOException e) {
                 e.printStackTrace();

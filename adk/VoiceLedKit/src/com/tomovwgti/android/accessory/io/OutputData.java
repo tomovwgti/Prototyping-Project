@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2011 PIGMAL LLC
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,25 +12,19 @@
  * limitations under the License.
  */
 
-package com.pigmal.android.ex.accessory;
+package com.tomovwgti.android.accessory.io;
 
-import com.pigmal.android.accessory.Accessory;
+public abstract class OutputData {
 
-/**
- * Control the user input and output to ADK
- * 
- * @author itog
- */
-public class OutputController {
-    private static final String TAG = OutputController.class.getSimpleName();
+    private ADKCommandSender mSender = null;
 
-    private ADKCommandSender adkSender;
-
-    public OutputController(Accessory acc) {
-        adkSender = new ADKCommandSender(acc);
+    public OutputData() {
+        mSender = ADKCommandSender.getSender();
     }
 
-    public void setBalse(boolean flag) {
-        adkSender.balseSequence(flag);
+    protected void sendCommand(byte command, byte target, int value) {
+        mSender.sendCommand(command, target, value);
     }
+
+    public abstract void sendData();
 }

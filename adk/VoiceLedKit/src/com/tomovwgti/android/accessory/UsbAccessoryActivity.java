@@ -30,7 +30,7 @@
  * limitations under the License.
  */
 
-package com.pigmal.android.accessory;
+package com.tomovwgti.android.accessory;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -43,18 +43,18 @@ import com.tomovwgti.megaadk.VoiceLedDemo;
  * USB service and springboards to the main Gallery activity
  */
 public final class UsbAccessoryActivity extends Activity {
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		//Intent intent = DemoKitLaunch.createIntent(this);
-		Intent intent = new Intent(this, VoiceLedDemo.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		try {
-			startActivity(intent);
-		} catch (ActivityNotFoundException e) {
-			e.printStackTrace();
-		}
-		finish();
-	}
+        // Intent intent = DemoKitLaunch.createIntent(this);
+        Intent intent = new Intent(this, VoiceLedDemo.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        try {
+            startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+        }
+        finish();
+    }
 }

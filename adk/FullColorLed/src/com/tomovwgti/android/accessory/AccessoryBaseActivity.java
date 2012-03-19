@@ -40,9 +40,9 @@ public abstract class AccessoryBaseActivity extends Activity {
     private boolean mPermissionRequestPending;
     private UsbManager mUsbManager;
     private UsbAccessory mUsbAccessory;
-    protected Accessory mOpenAccessory;
+    private Accessory mOpenAccessory;
 
-    protected ADKCommandSender mSender;
+    private ADKCommandSender mSender;
 
     /**
      * nofity USB is atached
