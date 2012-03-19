@@ -1,15 +1,9 @@
-#include <LiquidCrystal.h>
 
 // 加速度センサのx軸とy軸に接続したアナログのピン番号
 const int xAxisPin = A0;
 const int yAxisPin = A1;
 
-// LCD
-LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
-
 void setup() {
-  // LCDの桁数と行数をセット
-  lcd.begin(16,2);
   Serial.begin(9600);
   Serial.println("start");
 }
@@ -30,17 +24,6 @@ void loop() {
   // 逆サインを求めた結果（単位はラジアン）を度に変換
   int xAxisTilt = floor(asin(xAxisSinTheta) * 180 / PI);
   int yAxisTilt = floor(asin(yAxisSinTheta) * 180 / PI);
-
-  // LCDの表示をクリアしてそれぞれの軸のラベルをプリント
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("x: y:");
-  
-  // それぞれの軸の値をプリント
-  lcd.setCursor(0, 1);
-  lcd.print(xAxisTilt);
-  lcd.setCursor(6, 1);
-  lcd.print(yAxisTilt);
   
   Serial.print("X axis ");
   Serial.println(xAxisTilt);
