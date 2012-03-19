@@ -1,7 +1,7 @@
 /*
-  Full Color LED Control
- 
-  This example code is in the public domain.
+  FullColorLED
+
+  フルカラーLEDの色を変える
  */
 
 #define LED_RED    9

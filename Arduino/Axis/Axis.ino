@@ -1,7 +1,13 @@
 
+/*
+  Axis
+
+  3軸加速度センサーの値を読み取る
+ */
+
 // 加速度センサのx軸とy軸に接続したアナログのピン番号
-const int xAxisPin = A0;
-const int yAxisPin = A1;
+#define X_AXIS A0
+#define Y_AXIS A1
 
 void setup() {
   Serial.begin(9600);
@@ -10,8 +16,8 @@ void setup() {
 
 void loop() {
   // x軸とy軸の値を読み取る
-  int xAxisValue = analogRead(xAxisPin);
-  int yAxisValue = analogRead(yAxisPin);
+  int xAxisValue = analogRead(X_AXIS);
+  int yAxisValue = analogRead(Y_AXIS);
   
   // 読み取った値を-1から1までの範囲にスケーリングしてsinθの値とする
   float xAxisSinTheta = mapInFloat(xAxisValue, 306, 716, -1, 1);
