@@ -1,8 +1,7 @@
 /*
   Switch
-  Turns on an LED on for one second, then off for one second, repeatedly.
- 
-  This example code is in the public domain.
+
+  スイッチ押してる間LEDが点灯する
  */
 
 #define SWITCH  7
@@ -25,5 +24,5 @@ void loop() {
   } else {
     digitalWrite(LED, LOW);
   }
-  delay(1000);
+  delay(100);
 }
