@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pigmal.android.accessory;
+package com.tomovwgti.android.accessory;
 
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -29,7 +29,7 @@ import android.view.MenuItem;
 
 import com.android.future.usb.UsbAccessory;
 import com.android.future.usb.UsbManager;
-import com.pigmal.android.ex.accessory.ADKCommandSender;
+import com.tomovwgti.android.accessory.io.ADKCommandSender;
 
 public abstract class AccessoryBaseActivity extends Activity {
     private static final String TAG = AccessoryBaseActivity.class.getSimpleName();
@@ -193,7 +193,13 @@ public abstract class AccessoryBaseActivity extends Activity {
         return true;
     }
 
+    /**
+     * Menu ADK is connected
+     */
     abstract protected void showControls();
 
+    /**
+     * Menu ADK is not connected
+     */
     abstract protected void hideControls();
 }

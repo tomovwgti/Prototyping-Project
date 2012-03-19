@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2011 PIGMAL LLC
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,32 +12,26 @@
  * limitations under the License.
  */
 
-package com.pigmal.android.ex.accessory;
+package com.tomovwgti.android.accessory.io;
 
-import com.pigmal.android.accessory.Accessory;
+import com.tomovwgti.android.accessory.Accessory;
 
 /**
- * Send command to RT-ADK & RT-ADS hardware
- * 
- * @author itog
+ * Send command to MEGA ADK hardware
  */
 public class ADKCommandSender {
     private static final String TAG = ADKCommandSender.class.getSimpleName();
 
-    private ADKCommandSender mSender = null;
+    private static ADKCommandSender sSender = null;
     private Accessory openAccessory;
 
     public ADKCommandSender(Accessory acc) {
         openAccessory = acc;
+        sSender = this;
     }
 
-    /**
-     * 取得
-     * 
-     * @return
-     */
-    public ADKCommandSender getSender() {
-        return mSender;
+    public static ADKCommandSender getSender() {
+        return sSender;
     }
 
     public void sendData(OutputData out) {
