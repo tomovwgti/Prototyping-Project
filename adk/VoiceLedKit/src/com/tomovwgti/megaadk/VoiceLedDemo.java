@@ -56,14 +56,6 @@ public class VoiceLedDemo extends AccessoryBaseActivity {
         });
     }
 
-    /**
-     * Hide all controlls
-     */
-    @Override
-    protected void hideControls() {
-        setContentView(R.layout.no_device);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         String RESULT_STRING = "バルス";

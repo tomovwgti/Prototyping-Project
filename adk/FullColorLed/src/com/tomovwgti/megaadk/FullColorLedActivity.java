@@ -97,9 +97,4 @@ public class FullColorLedActivity extends AccessoryBaseActivity {
             }
         });
     }
-
-    @Override
-    protected void hideControls() {
-        setContentView(R.layout.no_device);
-    }
 }

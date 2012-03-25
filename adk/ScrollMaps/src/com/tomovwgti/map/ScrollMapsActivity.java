@@ -1,90 +1,54 @@
 
 package com.tomovwgti.map;
 
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.Window;
+import android.util.Log;
 import android.webkit.WebView;
-import android.widget.Toast;
 
-import com.pigmal.android.util.Logger;
 import com.tomovwgti.android.accessory.AccessoryBaseActivity;
+import com.tomovwgti.android.accessory.io.ADKCommandAbstractReciever;
+import com.tomovwgti.android.accessory.io.ADKCommandReciever;
 
 public class ScrollMapsActivity extends AccessoryBaseActivity {
+    private static final String TAG = ScrollMapsActivity.class.getSimpleName();
+
     private String URL = "http://dl.dropbox.com/u/589955/MapSample.html";
     private WebView mWebView;
-    private ADKCommandReceiver mReceiver;
-    private InputController mInputController;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.main);
-
-        mReceiver = new ADKCommandReceiver();
-        mOpenAccessory.setListener(mReceiver);
-
-        if (mOpenAccessory.isConnected()) {
-            Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
-            showControls();
-
-        } else {
-            mReceiver.removeInputController();
-            mInputController = null;
-            Toast.makeText(this, "Not Connected", Toast.LENGTH_SHORT).show();
-        }
-
-        mWebView = (WebView) findViewById(R.id.webview);
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.loadUrl(URL);
-
-    }
-
-    public void callJavaScript(String data) {
-        mWebView.loadUrl(data);
-    }
 
     /**
      * Show controls on the display
      */
-    private void showControls() {
-        mInputController = new InputController(this, mWebView);
-        mReceiver.setInputController(mInputController);
+    @Override
+    protected void showControls() {
+        setContentView(R.layout.main);
+
+        mWebView = (WebView) findViewById(R.id.webview);
+        mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.loadUrl(URL);
     }
 
     @Override
-    protected void onUsbAtached() {
-        Logger.v("onUsbAtached");
-        showControls();
+    protected ADKCommandAbstractReciever createReciever() {
+        return new ADKCommandReciever(this);
     }
 
-    @Override
-    protected void onUsbDetached() {
-        Logger.v("onUsbDetached");
-        mReceiver.removeInputController();
-        mInputController = null;
-    }
-
-    @Override
-    public void onDestroy() {
-        mOpenAccessory.removeListener();
-        super.onDestroy();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getTitle().equals("Quit")) {
-            finish();
+    public void setAxisValue(int xaxis, int yaxis, int zaxis) {
+        // Log.i("AXIS", "X-AXIS: " + xaxis);
+        // Log.i("AXIS", "Y-AXIS: " + yaxis);
+        // Log.i("AXIS", "Z-AXIS: " + zaxis);
+        // 誤差調整
+        if (-10 < xaxis && xaxis < 10) {
+            xaxis = 0;
         }
-        return true;
+        if (-10 < yaxis && yaxis < 10) {
+            yaxis = 0;
+        }
+
+        String text = "javascript:callJS(" + yaxis + "," + xaxis + ")";
+        Log.i("AXIS", text);
+        mWebView.loadUrl(text);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add("Quit");
-        return true;
+    public void callJavaScript(String data) {
+        mWebView.loadUrl(data);
     }
 }

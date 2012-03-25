@@ -32,29 +32,16 @@
 
 package com.tomovwgti.android.accessory;
 
-import com.tomovwgti.map.ScrollMapsActivity;
-
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.os.Bundle;
 
+import com.tomovwgti.map.ScrollMapsActivity;
 
 /* This Activity does nothing but receive USB_DEVICE_ATTACHED events from the
  * USB service and springboards to the main Gallery activity
  */
-public final class UsbAccessoryActivity extends Activity {
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		Intent intent = new Intent(this, ScrollMapsActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		try {
-			startActivity(intent);
-		} catch (ActivityNotFoundException e) {
-			e.printStackTrace();
-		}
-		finish();
-	}
+public final class UsbAccessoryActivity extends UsbAccessoryAbstractActivity {
+    @Override
+    protected Intent getMainActivity() {
+        return new Intent(this, ScrollMapsActivity.class);
+    }
 }
