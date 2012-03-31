@@ -6,9 +6,14 @@
 
 #define SWITCH  2
 #define LED    13
+#define INTERRUPT 0
+
+volatile int state = LOW;
 
 void setup() {
   pinMode(SWITCH, INPUT);
+//  attachInterrupt(INTERRUPT, interrupt, LOW);
+
   pinMode(LED, OUTPUT);
   digitalWrite(LED, LOW);
 
@@ -17,12 +22,26 @@ void setup() {
 }
 
 void loop() {
-  int push = digitalRead(SWITCH);
-  Serial.println(push);
-  if ( push == LOW ) {
+  state = digitalRead(SWITCH);
+  Serial.println(state);
+
+  polling();
+
+  delay(100);
+}
+
+// ポーリング
+void polling() {
+  if ( state == LOW ) {
     digitalWrite(LED, HIGH);
   } else {
     digitalWrite(LED, LOW);
   }
-  delay(100);
+}
+
+// 割り込みルーチン
+void interrupt() {
+  digitalWrite(LED, HIGH);
+  delayMicroseconds(10000);
+  digitalWrite(LED, LOW);
 }
