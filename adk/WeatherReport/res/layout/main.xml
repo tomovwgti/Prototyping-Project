@@ -31,4 +31,11 @@
         android:text="気温 : "
         android:textAppearance="?android:attr/textAppearanceLarge" />
     
+    <ImageView
+        android:id="@+id/image"
+        android:paddingTop="30dp"
+        android:layout_gravity="center"
+        android:layout_width="128dp"
+        android:layout_height="128dp"/>
+
 </LinearLayout>

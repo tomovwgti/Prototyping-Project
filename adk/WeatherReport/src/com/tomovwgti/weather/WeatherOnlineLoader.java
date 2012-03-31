@@ -12,7 +12,6 @@ import java.net.URL;
 import net.arnx.jsonic.JSON;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.tomovwgti.weather.WeatherOnlineLoader.Weather;
 import com.worldweatheronline.json.JsonObj;
@@ -21,7 +20,7 @@ public class WeatherOnlineLoader extends AsyncTask<String, Void, Weather> {
     private static final String TAG = WeatherOnlineLoader.class.getSimpleName();
 
     public interface WeatherOnlineListener {
-        public void viewResult(String temp, String weather);
+        public void viewResult(String temp, String weather, String imageUrl);
     }
 
     private static final String TARGET_URL = "free.worldweatheronline.com";
@@ -65,19 +64,16 @@ public class WeatherOnlineLoader extends AsyncTask<String, Void, Weather> {
         // JSONをパースする
         JsonObj jsonObj = JSON.decode(jsonString, JsonObj.class);
         Weather weather = new Weather(jsonObj.getData().getCurrentCondition().get(0).getTempC(),
-                jsonObj.getData().getCurrentCondition().get(0).getWeatherDesc().get(0).getValue());
-        Log.i(TAG,
-                "URL "
-                        + jsonObj.getData().getCurrentCondition().get(0).getWeatherIconUrl().get(0)
-                                .getValue());
+                jsonObj.getData().getCurrentCondition().get(0).getWeatherDesc().get(0).getValue(),
+                jsonObj.getData().getCurrentCondition().get(0).getWeatherIconUrl().get(0)
+                        .getValue());
 
         return weather;
     }
 
     @Override
     protected void onPostExecute(Weather result) {
-        super.onPostExecute(result);
-        mListener.viewResult(result.temperature, result.weather);
+        mListener.viewResult(result.temperature, result.weather, result.imageUrl);
     }
 
     /**
@@ -100,10 +96,12 @@ public class WeatherOnlineLoader extends AsyncTask<String, Void, Weather> {
     public class Weather {
         public String temperature;
         public String weather;
+        public String imageUrl;
 
-        public Weather(String temperature, String weather) {
+        public Weather(String temperature, String weather, String imageUrl) {
             this.temperature = temperature;
             this.weather = weather;
+            this.imageUrl = imageUrl;
         }
     }
 }

@@ -2,13 +2,17 @@
 package com.tomovwgti.weather;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.tomovwgti.weather.ImageLoader.ImageListener;
 import com.tomovwgti.weather.PlaceLoader.PlaceListener;
 import com.tomovwgti.weather.WeatherOnlineLoader.WeatherOnlineListener;
 
@@ -19,6 +23,7 @@ public class WeatherReportActivity extends Activity implements WeatherOnlineList
     private LocationManager mLocationManager;
     private WeatherOnlineLoader mWeatherLoader;
     private PlaceLoader mPlaceLoader;
+    private ProgressDialog mProgress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,6 +33,10 @@ public class WeatherReportActivity extends Activity implements WeatherOnlineList
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         mWeatherLoader = new WeatherOnlineLoader(this);
         mPlaceLoader = new PlaceLoader(this);
+
+        mProgress = new ProgressDialog(this);
+        mProgress.setMessage("情報取得中...");
+        mProgress.show();
     }
 
     @Override
@@ -44,12 +53,23 @@ public class WeatherReportActivity extends Activity implements WeatherOnlineList
         if (mLocationManager != null) {
             mLocationManager.removeUpdates(this);
         }
+        mProgress.dismiss();
     }
 
     @Override
-    public void viewResult(String temp, String weather) {
-        TextView tempText = (TextView) findViewById(R.id.temperature);
-        TextView weatherText = (TextView) findViewById(R.id.weather);
+    public void viewResult(String temp, String weather, String imageUrl) {
+        final TextView tempText = (TextView) findViewById(R.id.temperature);
+        final TextView weatherText = (TextView) findViewById(R.id.weather);
+        final ImageView weatherImage = (ImageView) findViewById(R.id.image);
+
+        ImageLoader imageLoader = new ImageLoader(new ImageListener() {
+            @Override
+            public void viewResult(Bitmap image) {
+                weatherImage.setImageBitmap(image);
+                mProgress.dismiss();
+            }
+        });
+        imageLoader.execute(imageUrl);
 
         tempText.setText("気温 : " + temp + " ℃");
         weatherText.setText("天気 : " + weather);
@@ -58,7 +78,6 @@ public class WeatherReportActivity extends Activity implements WeatherOnlineList
     @Override
     public void viewResult(String place) {
         TextView placeText = (TextView) findViewById(R.id.place);
-
         placeText.setText("場所 : " + place);
     }
 

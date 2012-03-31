@@ -100,7 +100,6 @@ public class PlaceLoader extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        super.onPostExecute(result);
         mListener.viewResult(result);
     }
 
