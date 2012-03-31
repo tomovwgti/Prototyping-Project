@@ -14,30 +14,29 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.tomovwgti.weather.WeatherOnlineLoader.Weather;
 import com.worldweatheronline.json.JsonObj;
 
-public class HttpLoader extends AsyncTask<Void, Void, String> {
-    private static final String TAG = HttpLoader.class.getSimpleName();
+public class WeatherOnlineLoader extends AsyncTask<String, Void, Weather> {
+    private static final String TAG = WeatherOnlineLoader.class.getSimpleName();
 
-    public interface HttpListener {
+    public interface WeatherOnlineListener {
         public void viewResult(String temp, String weather);
     }
 
     private static final String TARGET_URL = "free.worldweatheronline.com";
     private static final String KEY = "a75e78070e034532122203";
 
-    private HttpListener mListener;
+    private WeatherOnlineListener mListener;
     private HttpURLConnection mHttp = null;
-    private URL mUrl;
 
-    public HttpLoader(HttpListener listener) {
+    public WeatherOnlineLoader(WeatherOnlineListener listener) {
         mListener = listener;
     }
 
     @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-
+    protected Weather doInBackground(String... location) {
+        URL url = null;
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("http");
         builder.authority(TARGET_URL);
@@ -45,18 +44,15 @@ public class HttpLoader extends AsyncTask<Void, Void, String> {
         builder.appendQueryParameter("key", KEY);
         builder.appendQueryParameter("format", "json");
         try {
-            mUrl = new URL(builder.toString() + "&q=35.85,139.52");
+            url = new URL(builder.toString() + "&q=" + location[0] + "," + location[1]);
         } catch (MalformedURLException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
+            return null;
         }
-    }
 
-    @Override
-    protected String doInBackground(Void... params) {
         String jsonString = null;
         try {
-            mHttp = (HttpURLConnection) mUrl.openConnection();
+            mHttp = (HttpURLConnection) url.openConnection();
             mHttp.setRequestMethod("GET");
             mHttp.connect();
             // データを取得
@@ -65,22 +61,23 @@ public class HttpLoader extends AsyncTask<Void, Void, String> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return jsonString;
-    }
 
-    @Override
-    protected void onPostExecute(String result) {
-        super.onPostExecute(result);
-
-        JsonObj jsonObj = JSON.decode(result, JsonObj.class);
-        String temp = jsonObj.getData().getCurrentCondition().get(0).getTempC();
-        String weather = jsonObj.getData().getCurrentCondition().get(0).getWeatherDesc().get(0)
-                .getValue();
+        // JSONをパースする
+        JsonObj jsonObj = JSON.decode(jsonString, JsonObj.class);
+        Weather weather = new Weather(jsonObj.getData().getCurrentCondition().get(0).getTempC(),
+                jsonObj.getData().getCurrentCondition().get(0).getWeatherDesc().get(0).getValue());
         Log.i(TAG,
                 "URL "
                         + jsonObj.getData().getCurrentCondition().get(0).getWeatherIconUrl().get(0)
                                 .getValue());
-        mListener.viewResult(temp, weather);
+
+        return weather;
+    }
+
+    @Override
+    protected void onPostExecute(Weather result) {
+        super.onPostExecute(result);
+        mListener.viewResult(result.temperature, result.weather);
     }
 
     /**
@@ -98,5 +95,15 @@ public class HttpLoader extends AsyncTask<Void, Void, String> {
             sb.append(line);
         }
         return sb.toString();
+    }
+
+    public class Weather {
+        public String temperature;
+        public String weather;
+
+        public Weather(String temperature, String weather) {
+            this.temperature = temperature;
+            this.weather = weather;
+        }
     }
 }
