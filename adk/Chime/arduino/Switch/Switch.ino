@@ -6,7 +6,7 @@
 #include <Usb.h>
 #include <AndroidAccessory.h>
 
-#define SWITCH  7
+#define SWITCH  2
 #define LED    13
 
 AndroidAccessory acc("Google, Inc.",

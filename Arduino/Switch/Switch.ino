@@ -4,7 +4,7 @@
   スイッチ押してる間LEDが点灯する
  */
 
-#define SWITCH  7
+#define SWITCH  2
 #define LED    13
 
 void setup() {
