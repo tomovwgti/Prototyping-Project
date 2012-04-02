@@ -22,11 +22,11 @@ import de.roderick.weberknecht.WebSocketEventHandler;
 import de.roderick.weberknecht.WebSocketMessage;
 
 public class WebSocketActivity extends Activity {
-    private static final String TAG = WebSocketActivity.class.getSimpleName();
+    static final String TAG = WebSocketActivity.class.getSimpleName();
 
     private static String WS_URI = "ws://192.168.110.110:8001/";
-    private static final String NULLPO_KEY = "nullpo";
-    private static final String GATT_KEY = "gatt";
+    private static final String NULLPO_KEY = "ぬるぽ";
+    private static final String GATT_KEY = "ｶﾞｯ";
 
     private static final String NULLPO_TEXT = "ぬるぽ ( ´∀｀)";
     private static final String GATT_TEXT = "ｶﾞｯ (ヽ'ω`)";
@@ -40,7 +40,6 @@ public class WebSocketActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "opened message window");
         setContentView(R.layout.message);
         activity = this;
 
@@ -56,7 +55,6 @@ public class WebSocketActivity extends Activity {
         nullpoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "nullpo button clecked");
                 WebSocketManager.send(NULLPO_KEY);
                 setMessage(NULLPO_TEXT, Color.BLUE);
             }
@@ -78,7 +76,6 @@ public class WebSocketActivity extends Activity {
         mapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "map button clecked");
                 WebSocketManager.send("geo:36.744386,139.457703");
                 setMessage(GATT_TEXT, Color.GREEN);
             }
@@ -86,8 +83,6 @@ public class WebSocketActivity extends Activity {
     }
 
     private void setMessage(final String message, final int color) {
-        Log.d(TAG, "send message");
-
         // WebSocketHandlerのonMessageは別スレッドなのでhandlerを用いてviewの書き換えを行う
         handler.post(new Runnable() {
             @Override

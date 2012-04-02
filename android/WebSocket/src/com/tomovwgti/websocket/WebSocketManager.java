@@ -11,7 +11,7 @@ import de.roderick.weberknecht.WebSocketEventHandler;
 import de.roderick.weberknecht.WebSocketException;
 
 public class WebSocketManager {
-    private static final String TAG = WebSocketManager.class.getSimpleName();
+    static final String TAG = WebSocketManager.class.getSimpleName();
     private static WebSocket websocket;
 
     public static void connect(String url, WebSocketEventHandler handler) {
