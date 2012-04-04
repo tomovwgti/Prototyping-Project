@@ -125,6 +125,8 @@ public class WebSocketActivity extends Activity {
                     } else {
                         setMessage(str, Color.BLUE);
                     }
+                } else if (schema.equals("command")) {
+                    setMessage(str, Color.BLUE);
                 } else {
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
