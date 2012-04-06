@@ -7,7 +7,7 @@ import android.util.Log;
 
 import com.tomovwgti.map.Axis;
 
-public class ADKCommandReciever extends ADKCommandAbstractReciever {
+public class ADKCommandReciever extends ADKCommandAbstractReceiver {
     private static final String TAG = ADKCommandReciever.class.getSimpleName();
 
     private final Activity mActivity;

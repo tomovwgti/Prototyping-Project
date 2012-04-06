@@ -7,12 +7,12 @@ import android.util.Log;
 
 import com.tomovwgti.chime.Switch;
 
-public class ADKCommandReciever extends ADKCommandAbstractReciever {
-    private static final String TAG = ADKCommandReciever.class.getSimpleName();
+public class ADKCommandReceiver extends ADKCommandAbstractReceiver {
+    private static final String TAG = ADKCommandReceiver.class.getSimpleName();
 
     private final Activity mActivity;
 
-    public ADKCommandReciever(Activity activity) {
+    public ADKCommandReceiver(Activity activity) {
         this.mActivity = activity;
     }
 

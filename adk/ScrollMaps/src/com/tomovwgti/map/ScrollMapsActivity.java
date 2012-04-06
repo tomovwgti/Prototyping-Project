@@ -5,7 +5,7 @@ import android.util.Log;
 import android.webkit.WebView;
 
 import com.tomovwgti.android.accessory.AccessoryBaseActivity;
-import com.tomovwgti.android.accessory.io.ADKCommandAbstractReciever;
+import com.tomovwgti.android.accessory.io.ADKCommandAbstractReceiver;
 import com.tomovwgti.android.accessory.io.ADKCommandReciever;
 
 public class ScrollMapsActivity extends AccessoryBaseActivity {
@@ -27,7 +27,7 @@ public class ScrollMapsActivity extends AccessoryBaseActivity {
     }
 
     @Override
-    protected ADKCommandAbstractReciever createReciever() {
+    protected ADKCommandAbstractReceiver createReciever() {
         return new ADKCommandReciever(this);
     }
 

@@ -5,8 +5,8 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 
 import com.tomovwgti.android.accessory.AccessoryBaseActivity;
-import com.tomovwgti.android.accessory.io.ADKCommandAbstractReciever;
-import com.tomovwgti.android.accessory.io.ADKCommandReciever;
+import com.tomovwgti.android.accessory.io.ADKCommandAbstractReceiver;
+import com.tomovwgti.android.accessory.io.ADKCommandReceiver;
 
 public class ChimeActivity extends AccessoryBaseActivity {
 
@@ -22,8 +22,8 @@ public class ChimeActivity extends AccessoryBaseActivity {
     }
 
     @Override
-    protected ADKCommandAbstractReciever createReciever() {
-        return new ADKCommandReciever(this);
+    protected ADKCommandAbstractReceiver createReciever() {
+        return new ADKCommandReceiver(this);
     }
 
     public void setChime() {
