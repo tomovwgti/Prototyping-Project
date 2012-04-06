@@ -11,6 +11,7 @@
     <link rel="stylesheet" type="text/css" href="css/led.css">
 
     <script type="text/javascript" src="js/jquery-1.7.1.js"></script>
+    <script type="text/javascript" src="js/jquery.url.js"></script>
     <script type="text/javascript" src="js/slider.js"></script>
 
 <script type="text/javascript">
@@ -57,12 +58,26 @@ function toHex(N) {
 ws.onmessage = function (event) {
     var receive_message = event.data;
     console.log('receive message <-- ' + receive_message);
-    $('body').append('<li>' + receive_message + '</li>');
+
     // goto Google Maps
     var schema = $.url(receive_message).attr('protocol');
     if (-1 != schema.indexOf('geo')) {
         var map = 'http://maps.google.co.jp/?ie=UTF8&ll=' + $.url(receive_message).attr('host') + '&z=13';
         document.location = map;
+    }
+    // RGB slider contorole
+    else if ( (-1 != schema.indexOf('command')) && (-1 != $.url(receive_message).attr('host')) ) {
+        var red = $.url(receive_message).param('r');
+
+
+        var green = $.url(receive_message).param('g');
+        var blue = $.url(receive_message).param('b');
+        updateColorfromWS(red, green, blue);
+    }
+    // append String
+
+    else {
+        $('body').append('<li>' + receive_message + '</li>');
     }
 }
 
@@ -77,6 +92,14 @@ function updateColor() {
     var send_message = 'command://light?r=' + r + '&g=' + g + '&b=' + b;
     console.log(send_message);
     ws.send(send_message);
+}
+
+function updateColorfromWS(red, green, blue) {
+    $('#slider-r').attr('value', red);
+    $('#slider-g').attr('value', green);
+    $('#slider-b').attr('value', blue);
+    $('#colorBox').css("background-color","rgb(" + red + "," + green + "," + blue + ")");
+    $('#hexValue').html('#' + toHex(red) + toHex(green) + toHex(blue));
 }
 
 $(function(){
