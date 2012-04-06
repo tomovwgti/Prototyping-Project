@@ -46,7 +46,7 @@ void loop()
       // msg[0] : Command
       // msg[1] : Target
       // msg[2] : Value
-
+/*
       Serial.print("len: ");
       Serial.println(len);
       Serial.print("msg[0]: ");
@@ -55,7 +55,7 @@ void loop()
       Serial.println(msg[1]);
       Serial.print("msg[2]: ");
       Serial.println(msg[2]);
-
+*/
       if (msg[0] == 0x02) {
         switch (msg[1]) {
           case 0:
