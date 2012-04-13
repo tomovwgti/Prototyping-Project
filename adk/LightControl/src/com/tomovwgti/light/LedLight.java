@@ -14,7 +14,9 @@
 
 package com.tomovwgti.light;
 
-public class LedLight /* extends OutputData */{
+import com.tomovwgti.android.accessory.io.OutputData;
+
+public class LedLight extends OutputData {
 
     static final String TAG = LedLight.class.getSimpleName();
 
@@ -30,12 +32,12 @@ public class LedLight /* extends OutputData */{
     public int green;
     public int blue;
 
-    // @Override
-    // public void sendData() {
-    // sendCommand(LED_COMMAND, RED_LED, red);
-    // sendCommand(LED_COMMAND, GREEN_LED, green);
-    // sendCommand(LED_COMMAND, BLUE_LED, blue);
-    // }
+    @Override
+    public void sendData() {
+        sendCommand(LED_COMMAND, RED_LED, red);
+        sendCommand(LED_COMMAND, GREEN_LED, green);
+        sendCommand(LED_COMMAND, BLUE_LED, blue);
+    }
 
     public void sendWebSocket() {
         WebSocketManager.send("command://light?r=" + red + "&g=" + green + "&b=" + blue);

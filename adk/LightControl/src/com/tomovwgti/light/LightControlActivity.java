@@ -1,13 +1,10 @@
 
 package com.tomovwgti.light;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -17,18 +14,19 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+
+import com.tomovwgti.android.accessory.AccessoryBaseActivity;
+
 import de.roderick.weberknecht.WebSocketEventHandler;
 import de.roderick.weberknecht.WebSocketMessage;
 
-public class LightControlActivity extends Activity {
+public class LightControlActivity extends AccessoryBaseActivity {
     static final String TAG = LightControlActivity.class.getSimpleName();
 
     private static String WS_URI = "ws://192.168.110.110:8001/";
     private AlertDialog mAlertDialog;
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
-    private Activity activity;
-    private Handler handler = new Handler();
 
     private SeekBar mRedLed;
     private SeekBar mGreenLed;
@@ -40,10 +38,8 @@ public class LightControlActivity extends Activity {
     private LedLight mLed;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void showControls() {
         setContentView(R.layout.main);
-        activity = this;
 
         pref = PreferenceManager.getDefaultSharedPreferences(this);
         editor = pref.edit();
@@ -61,7 +57,7 @@ public class LightControlActivity extends Activity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 mRedText.setText("RED : " + progress);
                 mLed.red = progress;
-                // mLed.sendData();
+                mLed.sendData();
                 mLed.sendWebSocket();
             }
 
@@ -82,7 +78,7 @@ public class LightControlActivity extends Activity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 mGreenText.setText("GREEN : " + progress);
                 mLed.green = progress;
-                // mLed.sendData();
+                mLed.sendData();
                 mLed.sendWebSocket();
             }
 
@@ -102,7 +98,7 @@ public class LightControlActivity extends Activity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 mBlueText.setText("BLUE : " + progress);
                 mLed.blue = progress;
-                // mLed.sendData();
+                mLed.sendData();
                 mLed.sendWebSocket();
             }
 
@@ -112,19 +108,6 @@ public class LightControlActivity extends Activity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-        });
-    }
-
-    private void setMessage(final String message, final int color) {
-        // WebSocketHandlerのonMessageは別スレッドなのでhandlerを用いてviewの書き換えを行う
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                // TextView messageArea = (TextView)
-                // activity.findViewById(R.id.message_area);
-                // messageArea.setText(message);
-                // messageArea.setTextColor(color);
             }
         });
     }
@@ -172,15 +155,15 @@ public class LightControlActivity extends Activity {
             String rStr = Uri.parse(str).getQueryParameter("r");
             String gStr = Uri.parse(str).getQueryParameter("g");
             String bStr = Uri.parse(str).getQueryParameter("b");
-            // LedLight light = new LedLight();
-            // light.red = contains(rStr);
-            // light.green = contains(gStr);
-            // light.blue = contains(bStr);
-            // light.sendData();
+            LedLight light = new LedLight();
+            light.red = contains(rStr);
+            light.green = contains(gStr);
+            light.blue = contains(bStr);
+            light.sendData();
             // 変化を反映する
-            mRedLed.setProgress(Integer.parseInt(rStr));
-            mGreenLed.setProgress(Integer.parseInt(gStr));
-            mBlueLed.setProgress(Integer.parseInt(bStr));
+            mRedLed.setProgress(light.red);
+            mGreenLed.setProgress(light.green);
+            mBlueLed.setProgress(light.blue);
         }
     }
 
