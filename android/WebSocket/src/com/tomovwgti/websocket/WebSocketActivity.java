@@ -1,6 +1,7 @@
 
 package com.tomovwgti.websocket;
 
+import net.arnx.jsonic.JSON;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -18,6 +19,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.tomovwgti.json.Msg;
+
 import de.roderick.weberknecht.WebSocketEventHandler;
 import de.roderick.weberknecht.WebSocketMessage;
 
@@ -55,7 +59,12 @@ public class WebSocketActivity extends Activity {
         nullpoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WebSocketManager.send(NULLPO_KEY);
+                Msg msg = new Msg();
+                msg.setCommand("");
+                msg.setSender("android");
+                msg.setMessage(NULLPO_KEY);
+                String message = JSON.encode(msg);
+                WebSocketManager.send(message);
                 setMessage(NULLPO_TEXT, Color.BLUE);
             }
         });
@@ -66,7 +75,12 @@ public class WebSocketActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "gatt button clecked");
-                WebSocketManager.send(GATT_KEY);
+                Msg msg = new Msg();
+                msg.setCommand("");
+                msg.setSender("android");
+                msg.setMessage(GATT_KEY);
+                String message = JSON.encode(msg);
+                WebSocketManager.send(message);
                 setMessage(GATT_TEXT, Color.GREEN);
             }
         });
@@ -76,8 +90,14 @@ public class WebSocketActivity extends Activity {
         mapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WebSocketManager.send("geo:36.744386,139.457703");
-                setMessage(GATT_TEXT, Color.GREEN);
+                Msg msg = new Msg();
+                msg.setCommand("geo");
+                msg.setSender("android");
+                msg.setLat("36.744386");
+                msg.setLon("139.457703");
+                String message = JSON.encode(msg);
+                WebSocketManager.send(message);
+                setMessage(message, Color.GREEN);
             }
         });
     }
@@ -115,9 +135,8 @@ public class WebSocketActivity extends Activity {
             public void onMessage(WebSocketMessage message) {
                 Log.d(TAG, "websocket message");
                 String str = message.getText();
-                String schema = Uri.parse(str).getScheme();
-
-                if (schema == null) {
+                Msg msg = JSON.decode(str, Msg.class);
+                if (msg.getCommand().equals("")) {
                     if (NULLPO_KEY.equals(str)) {
                         setMessage(NULLPO_TEXT, Color.RED);
                     } else if (GATT_KEY.equals(str)) {
@@ -125,19 +144,21 @@ public class WebSocketActivity extends Activity {
                     } else {
                         setMessage(str, Color.BLUE);
                     }
-                } else if (schema.equals("command")) {
-                    setMessage(str, Color.BLUE);
-                } else {
+                } else if (msg.getCommand().equals("geo")) {
+                    // Map呼び出し
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
-                    if (schema.equals("geo")) {
-                        // Map呼び出し
-                        intent.setData(Uri.parse(str + "?z=13"));
-                    } else if (schema.equals("http")) {
-                        // Browser呼び出し
-                        intent.setData(Uri.parse(str));
-                    }
+                    intent.setData(Uri.parse(str + "?z=13"));
                     startActivity(intent);
+                } else if (msg.getCommand().equals("http")) {
+                    // Browser呼び出し
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(str));
+                    startActivity(intent);
+                } else {
+                    // それ以外
+                    setMessage(str, Color.GREEN);
                 }
             }
 

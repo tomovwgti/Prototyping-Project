@@ -1,6 +1,7 @@
 
 package com.tomovwgti.webcommand;
 
+import net.arnx.jsonic.JSON;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -21,6 +22,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.tomovwgti.android.accessory.AccessoryBaseActivity;
+import com.tomovwgti.json.Msg;
 
 import de.roderick.weberknecht.WebSocketEventHandler;
 import de.roderick.weberknecht.WebSocketMessage;
@@ -64,7 +66,12 @@ public class WebCommandActivity extends AccessoryBaseActivity {
         nullpoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WebSocketManager.send(NULLPO_KEY);
+                Msg msg = new Msg();
+                msg.setCommand("");
+                msg.setSender("android");
+                msg.setMessage(NULLPO_KEY);
+                String message = JSON.encode(msg);
+                WebSocketManager.send(message);
                 setMessage(NULLPO_TEXT, Color.BLUE);
             }
         });
@@ -75,7 +82,12 @@ public class WebCommandActivity extends AccessoryBaseActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "gatt button clecked");
-                WebSocketManager.send(GATT_KEY);
+                Msg msg = new Msg();
+                msg.setCommand("");
+                msg.setSender("android");
+                msg.setMessage(GATT_KEY);
+                String message = JSON.encode(msg);
+                WebSocketManager.send(message);
                 setMessage(GATT_TEXT, Color.GREEN);
             }
         });
@@ -85,8 +97,14 @@ public class WebCommandActivity extends AccessoryBaseActivity {
         mapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WebSocketManager.send("geo:36.744386,139.457703");
-                setMessage(GATT_TEXT, Color.GREEN);
+                Msg msg = new Msg();
+                msg.setCommand("geo");
+                msg.setSender("android");
+                msg.setLat("36.744386");
+                msg.setLon("139.457703");
+                String message = JSON.encode(msg);
+                WebSocketManager.send(message);
+                setMessage(message, Color.GREEN);
             }
         });
     }
@@ -123,9 +141,9 @@ public class WebCommandActivity extends AccessoryBaseActivity {
             public void onMessage(WebSocketMessage message) {
                 Log.d(TAG, "websocket message");
                 String str = message.getText();
-                String schema = Uri.parse(str).getScheme();
+                Msg msg = JSON.decode(str, Msg.class);
 
-                if (schema == null) {
+                if (msg.getCommand().equals("")) {
                     if (NULLPO_KEY.equals(str)) {
                         setMessage(NULLPO_TEXT, Color.RED);
                     } else if (GATT_KEY.equals(str)) {
@@ -133,19 +151,30 @@ public class WebCommandActivity extends AccessoryBaseActivity {
                     } else {
                         setMessage(str, Color.BLUE);
                     }
-                } else if (schema.equals("command")) {
-                    executeCommand(str);
-                } else {
+                } else if (msg.getCommand().equals("geo")) {
+                    // Map呼び出し
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
-                    if (schema.equals("geo")) {
-                        // Map呼び出し
-                        intent.setData(Uri.parse(str + "?z=13"));
-                    } else if (schema.equals("http")) {
-                        // Browser呼び出し
-                        intent.setData(Uri.parse(str));
-                    }
+                    intent.setData(Uri.parse(str + "?z=13"));
                     startActivity(intent);
+                } else if (msg.getCommand().equals("http")) {
+                    // Browser呼び出し
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(str));
+                    startActivity(intent);
+                } else if (msg.getCommand().equals("light")) {
+                    // Fill Color LEDコントロール
+                    executeLight(msg);
+                } else if (msg.getCommand().equals("led")) {
+                    // LEDコントロール
+                    executeLed(msg);
+                } else if (msg.getCommand().equals("chime")) {
+                    // Chimeコントロール
+                    executeChime(msg);
+                } else {
+                    // それ以外
+                    setMessage(str, Color.GREEN);
                 }
             }
 
@@ -157,42 +186,36 @@ public class WebCommandActivity extends AccessoryBaseActivity {
     }
 
     /**
-     * コマンドを受けた時の処理
+     * Lightコマンドを受けた時の処理
      */
-    private void executeCommand(String str) {
+    private void executeLight(Msg msg) {
         // ADKへ出力
-        if (Uri.parse(str).getHost().equals("light")) {
-            String rStr = Uri.parse(str).getQueryParameter("r");
-            String gStr = Uri.parse(str).getQueryParameter("g");
-            String bStr = Uri.parse(str).getQueryParameter("b");
-            LedLight light = new LedLight();
-            light.red = contains(rStr);
-            light.green = contains(gStr);
-            light.blue = contains(bStr);
-            light.sendData();
-        } else if (Uri.parse(str).getHost().equals("led")) {
-            String state = Uri.parse(str).getQueryParameter("state");
-            Led led = new Led();
-            if (state.equals("false")) {
-                led.light = 0;
-            } else {
-                led.light = 1;
-            }
-            led.sendData();
-        }
-        // Androidで音を鳴らす
-        else if (Uri.parse(str).getHost().equals("chime")) {
-            mSp.play(mId, 1.0F, 1.0F, 0, 0, 1.0F);
-        }
+        LedLight light = new LedLight();
+        light.red = contains(msg.getRed());
+        light.green = contains(msg.getGreen());
+        light.blue = contains(msg.getBlue());
+        light.sendData();
     }
 
-    private int contains(String color) {
-        int value = 0;
-        if (color == null) {
-            return value;
+    /**
+     * LEDコマンドを受けた時の処理
+     */
+    private void executeLed(Msg msg) {
+        Led led = new Led();
+        if (msg.isStatus() == false) {
+            led.light = 0;
+        } else {
+            led.light = 1;
         }
-        value = Integer.parseInt(color);
+        led.sendData();
+    }
 
+    private void executeChime(Msg msg) {
+        // Androidで音を鳴らす
+        mSp.play(mId, 1.0F, 1.0F, 0, 0, 1.0F);
+    }
+
+    private int contains(int value) {
         if (value < 0) {
             return 0;
         } else if (value > 255) {

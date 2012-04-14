@@ -1,10 +1,10 @@
 
 package com.tomovwgti.light;
 
+import net.arnx.jsonic.JSON;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -16,6 +16,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.tomovwgti.android.accessory.AccessoryBaseActivity;
+import com.tomovwgti.json.Msg;
 
 import de.roderick.weberknecht.WebSocketEventHandler;
 import de.roderick.weberknecht.WebSocketMessage;
@@ -132,10 +133,10 @@ public class LightControlActivity extends AccessoryBaseActivity {
             public void onMessage(WebSocketMessage message) {
                 Log.d(TAG, "websocket message");
                 String str = message.getText();
-                String schema = Uri.parse(str).getScheme();
+                Msg msg = JSON.decode(str, Msg.class);
 
-                if (schema.equals("command")) {
-                    executeCommand(str);
+                if (msg.getCommand().equals("light")) {
+                    executeCommand(msg);
                 }
             }
 
@@ -147,33 +148,22 @@ public class LightControlActivity extends AccessoryBaseActivity {
     }
 
     /**
-     * コマンドを受けた時の処理
+     * lightコマンドを受けた時の処理
      */
-    private void executeCommand(String str) {
+    private void executeCommand(Msg msg) {
         // ADKへ出力
-        if (Uri.parse(str).getHost().equals("light")) {
-            String rStr = Uri.parse(str).getQueryParameter("r");
-            String gStr = Uri.parse(str).getQueryParameter("g");
-            String bStr = Uri.parse(str).getQueryParameter("b");
-            LedLight light = new LedLight();
-            light.red = contains(rStr);
-            light.green = contains(gStr);
-            light.blue = contains(bStr);
-            light.sendData();
-            // 変化を反映する
-            mRedLed.setProgress(light.red);
-            mGreenLed.setProgress(light.green);
-            mBlueLed.setProgress(light.blue);
-        }
+        LedLight light = new LedLight();
+        light.red = contains(msg.getRed());
+        light.green = contains(msg.getGreen());
+        light.blue = contains(msg.getBlue());
+        light.sendData();
+        // 変化を反映する
+        mRedLed.setProgress(light.red);
+        mGreenLed.setProgress(light.green);
+        mBlueLed.setProgress(light.blue);
     }
 
-    private int contains(String color) {
-        int value = 0;
-        if (color == null) {
-            return value;
-        }
-        value = Integer.parseInt(color);
-
+    private int contains(int value) {
         if (value < 0) {
             return 0;
         } else if (value > 255) {

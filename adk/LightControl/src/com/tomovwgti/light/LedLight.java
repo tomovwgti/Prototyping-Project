@@ -14,7 +14,10 @@
 
 package com.tomovwgti.light;
 
+import net.arnx.jsonic.JSON;
+
 import com.tomovwgti.android.accessory.io.OutputData;
+import com.tomovwgti.json.Msg;
 
 public class LedLight extends OutputData {
 
@@ -40,6 +43,13 @@ public class LedLight extends OutputData {
     }
 
     public void sendWebSocket() {
-        WebSocketManager.send("command://light?r=" + red + "&g=" + green + "&b=" + blue);
+        Msg msg = new Msg();
+        msg.setCommand("light");
+        msg.setSender("android");
+        msg.setRed(red);
+        msg.setGreen(green);
+        msg.setBlue(blue);
+        String message = JSON.encode(msg);
+        WebSocketManager.send(message);
     }
 }

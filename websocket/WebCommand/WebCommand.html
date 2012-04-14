@@ -11,7 +11,6 @@
     <link rel="stylesheet" type="text/css" href="css/led.css">
 
     <script type="text/javascript" src="js/jquery-1.7.1.js"></script>
-    <script type="text/javascript" src="js/jquery.url.js"></script>
     <script type="text/javascript" src="js/slider.js"></script>
 
 <script type="text/javascript">
@@ -26,7 +25,7 @@ for(var i = 0, imgSrc; imgSrc = imgList[i]; i++) {
 };
 
 // WebSocket
-var ws = new WebSocket('ws://192.168.110.195:8001/');
+var ws = new WebSocket('ws://192.168.1.3:8001/');
 
 // Create the div used to show the dynamically generated color
 function createColorBox() {
@@ -56,28 +55,20 @@ function toHex(N) {
 
 // Message from Server
 ws.onmessage = function (event) {
-    var receive_message = event.data;
-    console.log('receive message <-- ' + receive_message);
+    var receive_message = JSON.parse(event.data);
+    console.log('receive message <-- ' + event.data);
 
-    // goto Google Maps
-    var schema = $.url(receive_message).attr('protocol');
-    if (-1 != schema.indexOf('geo')) {
-        var map = 'http://maps.google.co.jp/?ie=UTF8&ll=' + $.url(receive_message).attr('host') + '&z=13';
+    if (receive_message.command === 'geo') {
+        var map = 'http://maps.google.co.jp/?ie=UTF8&ll=' + receive_message.lat +',' + receive_message.lon + '&z=13'
         document.location = map;
     }
     // RGB slider contorole
-    else if ( (-1 != schema.indexOf('command')) && (-1 != $.url(receive_message).attr('host')) ) {
-        var red = $.url(receive_message).param('r');
-
-
-        var green = $.url(receive_message).param('g');
-        var blue = $.url(receive_message).param('b');
-        updateColorfromWS(red, green, blue);
+    else if (receive_message.command === 'light' ) {
+        updateColorfromWS(receive_message.red, receive_message.green, receive_message.blue);
     }
     // append String
-
     else {
-        $('body').append('<li>' + receive_message + '</li>');
+        $('body').append('<li>' + receive_message.message + '</li>');
     }
 }
 
@@ -89,9 +80,19 @@ function updateColor() {
     $('#colorBox').css("background-color","rgb("+r+ ","+g+","+b+")");
     $('#hexValue').html('#' + toHex(r) + toHex(g) + toHex(b));
 
-    var send_message = 'command://light?r=' + r + '&g=' + g + '&b=' + b;
-    console.log(send_message);
-    ws.send(send_message);
+    var msg = {
+        'sender': 'browser',
+        'command': 'light',
+        'red': 0,
+        'green': 0,
+        'blue': 0
+    }
+//    var send_message = 'command://light?r=' + r + '&g=' + g + '&b=' + b;
+    msg.red = r;
+    msg.green = g;
+    msg.blue = b;
+    console.log(JSON.stringify(msg));
+    ws.send(JSON.stringify(msg));
 }
 
 function updateColorfromWS(red, green, blue) {
@@ -105,16 +106,26 @@ function updateColorfromWS(red, green, blue) {
 $(function(){
     var led_state = false;
     $('#chime').click(function() {
-        var send_message = 'command://chime';
-        console.log(send_message);
-        ws.send(send_message);
+        var msg = {
+            'sender': 'browser',
+            'command': 'chime'
+        }
+//        var send_message = 'command://chime';
+        console.log(JSON.stringify(msg));
+        ws.send(JSON.stringify(msg));
     });
 
     $('#led').click(function() {
         led_state = !led_state;
-        var send_message = 'command://led?state=' + led_state;
-        console.log(send_message);
-        ws.send(send_message);
+        var msg = {
+            'sender': 'browser',
+            'command': 'led',
+            'status': false
+        }
+        msg.status = led_state;
+//        var send_message = 'command://led?state=' + led_state;
+        console.log(JSON.stringify(msg));
+        ws.send(JSON.stringify(msg));
     });
 });
 
@@ -133,19 +144,19 @@ fdSliderController.addEvent(window, 'load', createColorBox);
             <label for="slider-r">Red:</label>
         </dt>
         <dd>
-            <input name="slider1" id="slider-r" type="text" title="Range: 0 - 255" class="fd_range_0_255 fd_classname_extraclass fd_callback_updateColor" value="128" />
+            <input name="slider1" id="slider-r" type="text" title="Range: 0 - 255" class="fd_range_0_255 fd_classname_extraclass fd_callback_updateColor" value="0" />
         </dd>
         <dt>
             <label for="slider-g">Green:</label>
         </dt>
         <dd>
-            <input name="slider2" id="slider-g" type="text" title="Range: 0 - 255" class="fd_range_0_255 fd_classname_extraclass fd_callback_updateColor" value="128" />
+            <input name="slider2" id="slider-g" type="text" title="Range: 0 - 255" class="fd_range_0_255 fd_classname_extraclass fd_callback_updateColor" value="0" />
         </dd>
         <dt>
             <label for="slider-b">Blue:</label>
         </dt>
         <dd>
-            <input name="slider3" id="slider-b" type="text" title="Range: 0 - 255" class="fd_range_0_255 fd_classname_extraclass fd_callback_updateColor" value="128" />
+            <input name="slider3" id="slider-b" type="text" title="Range: 0 - 255" class="fd_range_0_255 fd_classname_extraclass fd_callback_updateColor" value="0" />
         </dd>
       </dl>
     </fieldset>
