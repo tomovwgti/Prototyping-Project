@@ -59,7 +59,9 @@ public class LightControlActivity extends AccessoryBaseActivity {
                 mRedText.setText("RED : " + progress);
                 mLed.red = progress;
                 mLed.sendData();
-                mLed.sendWebSocket();
+                if (fromUser == true) {
+                    mLed.sendWebSocket();
+                }
             }
 
             @Override
@@ -80,7 +82,9 @@ public class LightControlActivity extends AccessoryBaseActivity {
                 mGreenText.setText("GREEN : " + progress);
                 mLed.green = progress;
                 mLed.sendData();
-                mLed.sendWebSocket();
+                if (fromUser == true) {
+                    mLed.sendWebSocket();
+                }
             }
 
             @Override
@@ -100,7 +104,9 @@ public class LightControlActivity extends AccessoryBaseActivity {
                 mBlueText.setText("BLUE : " + progress);
                 mLed.blue = progress;
                 mLed.sendData();
-                mLed.sendWebSocket();
+                if (fromUser == true) {
+                    mLed.sendWebSocket();
+                }
             }
 
             @Override

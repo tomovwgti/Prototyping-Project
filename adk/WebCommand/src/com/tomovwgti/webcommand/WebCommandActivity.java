@@ -210,6 +210,9 @@ public class WebCommandActivity extends AccessoryBaseActivity {
         led.sendData();
     }
 
+    /**
+     * CHIMEコマンドを受けた時の処理
+     */
     private void executeChime(Msg msg) {
         // Androidで音を鳴らす
         mSp.play(mId, 1.0F, 1.0F, 0, 0, 1.0F);
