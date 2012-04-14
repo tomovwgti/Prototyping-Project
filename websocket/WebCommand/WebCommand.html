@@ -87,7 +87,6 @@ function updateColor() {
         'green': 0,
         'blue': 0
     }
-//    var send_message = 'command://light?r=' + r + '&g=' + g + '&b=' + b;
     msg.red = r;
     msg.green = g;
     msg.blue = b;
@@ -110,7 +109,6 @@ $(function(){
             'sender': 'browser',
             'command': 'chime'
         }
-//        var send_message = 'command://chime';
         console.log(JSON.stringify(msg));
         ws.send(JSON.stringify(msg));
     });
@@ -123,7 +121,6 @@ $(function(){
             'status': false
         }
         msg.status = led_state;
-//        var send_message = 'command://led?state=' + led_state;
         console.log(JSON.stringify(msg));
         ws.send(JSON.stringify(msg));
     });
