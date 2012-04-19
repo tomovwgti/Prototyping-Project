@@ -1,18 +1,17 @@
-var sys = require('util');
 var ws = require('websocket-server'); 
 var sockets = [];
   
 var server = ws.createServer();
    
 server.addListener('listening', function(nonnection) {
-    sys.puts('listening..');
+    console.log('listening..');
 });
 server.addListener('connection', function(connection){
     sockets.push(connection);
-    sys.puts('connect');
+    console.log('connect');
 
     connection.addListener('message', function(message) {
-        sys.puts(message);
+        console.log(message);
         for (var k in sockets) {
             if (connection != sockets[k]){
                 sockets[k].send(message);
@@ -23,7 +22,7 @@ server.addListener('connection', function(connection){
     
 // 接続が切断された際のリスナー
 server.addListener('close', function(connection){
-    sys.puts('close');
+    console.log('close');
 });
 // listenするポート番号を指定
 server.listen(8001);
