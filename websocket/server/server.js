@@ -2,10 +2,13 @@ var ws = require('websocket-server');
 var sockets = [];
   
 var server = ws.createServer();
-   
+
+// サーバの開始
 server.addListener('listening', function(nonnection) {
     console.log('listening..');
 });
+
+// 接続された際のリスナー
 server.addListener('connection', function(connection){
     sockets.push(connection);
     console.log('connect');
@@ -24,5 +27,6 @@ server.addListener('connection', function(connection){
 server.addListener('close', function(connection){
     console.log('close');
 });
+
 // listenするポート番号を指定
 server.listen(8001);
