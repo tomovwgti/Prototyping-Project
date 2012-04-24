@@ -11,7 +11,7 @@ void setup() {  // 最初に１度だけ呼ばれる
   pinMode(LED, OUTPUT);  // LEDのピンを出力として設定
 }
 
-void loop() {
+void loop() {  // 無限ループ
   digitalWrite(LED, HIGH);   // LEDピンにHIGHを出力
   delay(1000);               // 1秒間のウェイト
   digitalWrite(LED, LOW);    // LEDピンにLOWを出力
