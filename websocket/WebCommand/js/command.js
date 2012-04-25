@@ -52,7 +52,6 @@ ws.onmessage = function (event) {
         case 'geo':
             var map = 'http://maps.google.co.jp/?ie=UTF8&ll=' + receive_message.lat +',' + receive_message.lon + '&z=13'
             document.location = map;
-            return;
             break;
         case 'light':
             updateColorfromWS(receive_message.red, receive_message.green, receive_message.blue);
@@ -61,12 +60,14 @@ ws.onmessage = function (event) {
 
     // Message
     switch (receive_message.message) {
+        // （」・ω・）」うー！
         case 'uu':
             $('#uu').vtoggle();
             if ($('#uu').css('visibility') === 'visible') {
                 uu_sound.play();
             }
             break;
+        // （／・ω・）／にゃー！
         case 'nyaa':
             $('#nyaa').vtoggle();
             if ($('#nyaa').css('visibility') === 'visible') {
