@@ -17,8 +17,8 @@ void setup() {
   pinMode(LED, OUTPUT);
   digitalWrite(LED, LOW);
 
-  Serial.begin(9600);
-  Serial.println("start");
+  Serial.begin(9600);      // シリアルに9600bpsで出力設定
+  Serial.println("start"); // デバッグ出力
 }
 
 void loop() {
