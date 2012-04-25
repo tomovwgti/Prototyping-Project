@@ -71,7 +71,7 @@ ws.onmessage = function (event) {
         case 'nyaa':
             $('#nyaa').vtoggle();
             if ($('#nyaa').css('visibility') === 'visible') {
-                uu_sound.play();
+                nyaa_sound.play();
             }
             break;
     }
