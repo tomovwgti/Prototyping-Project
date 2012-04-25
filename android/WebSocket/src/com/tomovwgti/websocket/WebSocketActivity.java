@@ -30,9 +30,11 @@ public class WebSocketActivity extends Activity {
 
     private static String WS_URI = "ws://192.168.110.110:8001/";
 
+    private static final String UU_STR = "uu";
+    private static final String NYAA_STR = "nyaa";
+
     private static final String UU_TEXT = "(」・ω・)」うー！";
     private static final String NYAA_TEXT = "(／・ω・)／にゃー！";
-    private static final String LETS_TEXT = " れっつ＼(・ω・)/にゃー！";
 
     private Handler handler = new Handler();
     private Activity activity;
@@ -61,7 +63,7 @@ public class WebSocketActivity extends Activity {
                 Msg msg = new Msg();
                 msg.setCommand("");
                 msg.setSender("android");
-                msg.setMessage(UU_TEXT);
+                msg.setMessage(UU_STR);
                 String message = JSON.encode(msg);
                 WebSocketManager.send(message);
                 setMessage(UU_TEXT, Color.BLUE);
@@ -76,25 +78,10 @@ public class WebSocketActivity extends Activity {
                 Msg msg = new Msg();
                 msg.setCommand("");
                 msg.setSender("android");
-                msg.setMessage(NYAA_TEXT);
+                msg.setMessage(NYAA_STR);
                 String message = JSON.encode(msg);
                 WebSocketManager.send(message);
                 setMessage(NYAA_TEXT, Color.GREEN);
-            }
-        });
-
-        // れっつボタン押下時の挙動
-        Button letsBtn = (Button) findViewById(R.id.btn_lets_btn);
-        letsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Msg msg = new Msg();
-                msg.setCommand("");
-                msg.setSender("android");
-                msg.setMessage(LETS_TEXT);
-                String message = JSON.encode(msg);
-                WebSocketManager.send(message);
-                setMessage(LETS_TEXT, Color.GREEN);
             }
         });
 

@@ -34,7 +34,6 @@ public class WebCommandActivity extends AccessoryBaseActivity {
 
     private static final String UU_TEXT = "(」・ω・)」うー！";
     private static final String NYAA_TEXT = "(／・ω・)／にゃー！";
-    private static final String LETS_TEXT = " れっつ＼(・ω・)/にゃー！";
 
     private Handler handler = new Handler();
     private Activity activity;
@@ -88,22 +87,6 @@ public class WebCommandActivity extends AccessoryBaseActivity {
                 String message = JSON.encode(msg);
                 WebSocketManager.send(message);
                 setMessage(NYAA_TEXT, Color.GREEN);
-            }
-        });
-
-        // れっつボタン押下時の挙動
-        Button letsBtn = (Button) findViewById(R.id.btn_lets_btn);
-        letsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "gatt button clecked");
-                Msg msg = new Msg();
-                msg.setCommand("");
-                msg.setSender("android");
-                msg.setMessage(LETS_TEXT);
-                String message = JSON.encode(msg);
-                WebSocketManager.send(message);
-                setMessage(LETS_TEXT, Color.GREEN);
             }
         });
 

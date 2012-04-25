@@ -34,12 +34,6 @@
             android:layout_width="match_parent"
             android:layout_weight="1" />
         <Button
-            android:id="@+id/btn_lets_btn"
-            android:text="れっつ"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_weight="1" />
-        <Button
             android:id="@+id/btn_map_btn"
             android:text="中禅寺湖"
             android:textSize="12dp"

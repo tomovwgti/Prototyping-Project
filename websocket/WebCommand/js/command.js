@@ -56,9 +56,13 @@ ws.onmessage = function (event) {
         updateColorfromWS(receive_message.red, receive_message.green, receive_message.blue);
     }
     // append String
-    else {
+    else if (receive_message.message === 'uu') {
+        $('#uu').vtoggle("visible");
+    } else if (receive_message.message === 'nyaa') {
+        $('#nyaa').vtoggle();
+    } else {
         $('body').append('<li>' + receive_message.message + '</li>');
-    }
+	}	
 }
 
 function updateColor() {
