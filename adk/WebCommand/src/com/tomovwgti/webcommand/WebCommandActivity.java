@@ -31,11 +31,10 @@ public class WebCommandActivity extends AccessoryBaseActivity {
     static final String TAG = WebCommandActivity.class.getSimpleName();
 
     private static String WS_URI = "ws://192.168.110.110:8001/";
-    private static final String NULLPO_KEY = "ぬるぽ";
-    private static final String GATT_KEY = "ｶﾞｯ";
 
-    private static final String NULLPO_TEXT = "ぬるぽ ( ´∀｀)";
-    private static final String GATT_TEXT = "ｶﾞｯ (ヽ'ω`)";
+    private static final String UU_TEXT = "(」・ω・)」うー！";
+    private static final String NYAA_TEXT = "(／・ω・)／にゃー！";
+    private static final String LETS_TEXT = " れっつ＼(・ω・)/にゃー！";
 
     private Handler handler = new Handler();
     private Activity activity;
@@ -61,34 +60,50 @@ public class WebCommandActivity extends AccessoryBaseActivity {
         mSp = new SoundPool(1, AudioManager.STREAM_RING, 0);
         mId = mSp.load(this, R.raw.chime, 1);
 
-        // ぬるぽボタン押下時の挙動
-        Button nullpoBtn = (Button) findViewById(R.id.btn_null_btn);
-        nullpoBtn.setOnClickListener(new View.OnClickListener() {
+        // うーボタン押下時の挙動
+        Button uuBtn = (Button) findViewById(R.id.btn_uu_btn);
+        uuBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Msg msg = new Msg();
                 msg.setCommand("");
                 msg.setSender("android");
-                msg.setMessage(NULLPO_KEY);
+                msg.setMessage(UU_TEXT);
                 String message = JSON.encode(msg);
                 WebSocketManager.send(message);
-                setMessage(NULLPO_TEXT, Color.BLUE);
+                setMessage(UU_TEXT, Color.BLUE);
             }
         });
 
-        // ガッボタン押下時の挙動
-        Button gattBtn = (Button) findViewById(R.id.btn_ga_btn);
-        gattBtn.setOnClickListener(new View.OnClickListener() {
+        // にゃーボタン押下時の挙動
+        Button nyaaBtn = (Button) findViewById(R.id.btn_nyaa_btn);
+        nyaaBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "gatt button clecked");
                 Msg msg = new Msg();
                 msg.setCommand("");
                 msg.setSender("android");
-                msg.setMessage(GATT_KEY);
+                msg.setMessage(NYAA_TEXT);
                 String message = JSON.encode(msg);
                 WebSocketManager.send(message);
-                setMessage(GATT_TEXT, Color.GREEN);
+                setMessage(NYAA_TEXT, Color.GREEN);
+            }
+        });
+
+        // れっつボタン押下時の挙動
+        Button letsBtn = (Button) findViewById(R.id.btn_lets_btn);
+        letsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "gatt button clecked");
+                Msg msg = new Msg();
+                msg.setCommand("");
+                msg.setSender("android");
+                msg.setMessage(LETS_TEXT);
+                String message = JSON.encode(msg);
+                WebSocketManager.send(message);
+                setMessage(LETS_TEXT, Color.GREEN);
             }
         });
 
@@ -144,10 +159,10 @@ public class WebCommandActivity extends AccessoryBaseActivity {
                 Msg msg = JSON.decode(str, Msg.class);
 
                 if (msg.getCommand().equals("")) {
-                    if (NULLPO_KEY.equals(str)) {
-                        setMessage(NULLPO_TEXT, Color.RED);
-                    } else if (GATT_KEY.equals(str)) {
-                        setMessage(GATT_TEXT, Color.YELLOW);
+                    if (UU_TEXT.equals(str)) {
+                        setMessage(UU_TEXT, Color.RED);
+                    } else if (NYAA_TEXT.equals(str)) {
+                        setMessage(NYAA_TEXT, Color.YELLOW);
                     } else {
                         setMessage(str, Color.BLUE);
                     }

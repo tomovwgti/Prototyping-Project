@@ -14,7 +14,7 @@ for(var i = 0, imgSrc; imgSrc = imgList[i]; i++) {
 };
 
 // WebSocket
-var ws = new WebSocket('ws://192.168.1.3:8001/');
+var ws = new WebSocket('ws://192.168.110.195:8001/');
 
 // Create the div used to show the dynamically generated color
 function createColorBox() {

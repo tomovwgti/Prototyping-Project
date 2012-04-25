@@ -22,20 +22,27 @@
         android:paddingRight="5dp"
         android:paddingTop="5dp">
         <Button
-            android:id="@+id/btn_null_btn"
-            android:text="ぬるぽ"
+            android:id="@+id/btn_uu_btn"
+            android:text="うー"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_weight="1" />
         <Button
-            android:id="@+id/btn_ga_btn"
-            android:text="ｶﾞｯ"
+            android:id="@+id/btn_nyaa_btn"
+            android:text="にゃー"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1" />
+        <Button
+            android:id="@+id/btn_lets_btn"
+            android:text="れっつ"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_weight="1" />
         <Button
             android:id="@+id/btn_map_btn"
             android:text="中禅寺湖"
+            android:textSize="12dp"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_weight="1" />
