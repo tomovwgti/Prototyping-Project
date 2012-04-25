@@ -47,22 +47,33 @@ ws.onmessage = function (event) {
     var receive_message = JSON.parse(event.data);
     console.log('receive message <-- ' + event.data);
 
-    if (receive_message.command === 'geo') {
-        var map = 'http://maps.google.co.jp/?ie=UTF8&ll=' + receive_message.lat +',' + receive_message.lon + '&z=13'
-        document.location = map;
+    // Command
+    switch (receive_message.command) {
+        case 'geo':
+            var map = 'http://maps.google.co.jp/?ie=UTF8&ll=' + receive_message.lat +',' + receive_message.lon + '&z=13'
+            document.location = map;
+            return;
+            break;
+        case 'light':
+            updateColorfromWS(receive_message.red, receive_message.green, receive_message.blue);
+            break;
     }
-    // RGB slider contorole
-    else if (receive_message.command === 'light' ) {
-        updateColorfromWS(receive_message.red, receive_message.green, receive_message.blue);
+
+    // Message
+    switch (receive_message.message) {
+        case 'uu':
+            $('#uu').vtoggle();
+            if ($('#uu').css('visibility') === 'visible') {
+                uu_sound.play();
+            }
+            break;
+        case 'nyaa':
+            $('#nyaa').vtoggle();
+            if ($('#nyaa').css('visibility') === 'visible') {
+                uu_sound.play();
+            }
+            break;
     }
-    // append String
-    else if (receive_message.message === 'uu') {
-        $('#uu').vtoggle("visible");
-    } else if (receive_message.message === 'nyaa') {
-        $('#nyaa').vtoggle();
-    } else {
-        $('body').append('<li>' + receive_message.message + '</li>');
-	}	
 }
 
 function updateColor() {
