@@ -1,12 +1,7 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
     <title>WebSocket / Node.js DEMO</title>
-    <meta http-equiv="Content-Type"         content="text/html; charset=iso-8859-1" />
-    <meta name="author"                     content="frequency decoder" />
-    <meta name="description"                content="An unobtrusive javascript that turns any text input or selectlist into a keyboard-accessible slider control" />
-    <meta http-equiv="imagetoolbar"         content="no" />
-
     <link rel="stylesheet" type="text/css" media="screen, projection" href="css/slider.css" />
     <link rel="stylesheet" type="text/css" href="css/led.css">
 
@@ -14,7 +9,6 @@
     <script type="text/javascript" src="js/jquery.vtoggle.js"></script>
     <script type="text/javascript" src="js/slider.js"></script>
     <script type="text/javascript" src="js/command.js"></script>
-
 </head>
 <body>
 <div id="article-wrapper">
@@ -49,10 +43,8 @@
     <hr>
     <span id="uu" style="visibility:hidden"><img src="./image/uu.png"></span>
     <span id="nyaa" style="visibility:hidden"><img src="./image/nyaa.png"></span>
-
-    <audio id="uu_sound" preload="auto">
-    <source src="./audio/uu.mp3">
-    <audio id="nyaa_sound" preload="auto">
-    <source src="./audio/nyaa.mp3">
+</div>
+<audio id="uu_sound" preload="auto" source src="./audio/uu.mp3"/>
+<audio id="nyaa_sound" preload="auto" source src="./audio/nyaa.mp3"/>
 </body>
 </html>
