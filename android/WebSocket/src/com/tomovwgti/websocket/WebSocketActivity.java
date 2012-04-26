@@ -66,7 +66,7 @@ public class WebSocketActivity extends Activity {
                 msg.setMessage(UU_STR);
                 String message = JSON.encode(msg);
                 WebSocketManager.send(message);
-                setMessage(UU_TEXT, Color.BLUE);
+                setMessage(UU_TEXT, Color.GREEN);
             }
         });
 
@@ -112,7 +112,6 @@ public class WebSocketActivity extends Activity {
                 messageArea.setTextColor(color);
             }
         });
-
     }
 
     @Override
@@ -137,10 +136,10 @@ public class WebSocketActivity extends Activity {
                 String str = message.getText();
                 Msg msg = JSON.decode(str, Msg.class);
                 if (msg.getCommand().equals("")) {
-                    if (UU_TEXT.equals(str)) {
+                    if (UU_STR.equals(msg.getMessage())) {
                         setMessage(UU_TEXT, Color.RED);
-                    } else if (NYAA_TEXT.equals(str)) {
-                        setMessage(NYAA_TEXT, Color.YELLOW);
+                    } else if (NYAA_STR.equals(msg.getMessage())) {
+                        setMessage(NYAA_TEXT, Color.RED);
                     } else {
                         setMessage(str, Color.BLUE);
                     }
@@ -148,7 +147,7 @@ public class WebSocketActivity extends Activity {
                     // Map呼び出し
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse(str + "?z=13"));
+                    intent.setData(Uri.parse("geo:" + msg.getLat() + "," + msg.getLon() + "?z=13"));
                     startActivity(intent);
                 } else if (msg.getCommand().equals("http")) {
                     // Browser呼び出し
