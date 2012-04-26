@@ -32,6 +32,9 @@ public class WebCommandActivity extends AccessoryBaseActivity {
 
     private static String WS_URI = "ws://192.168.110.110:8001/";
 
+    private static final String UU_STR = "uu";
+    private static final String NYAA_STR = "nyaa";
+
     private static final String UU_TEXT = "(」・ω・)」うー！";
     private static final String NYAA_TEXT = "(／・ω・)／にゃー！";
 
@@ -67,10 +70,10 @@ public class WebCommandActivity extends AccessoryBaseActivity {
                 Msg msg = new Msg();
                 msg.setCommand("");
                 msg.setSender("android");
-                msg.setMessage(UU_TEXT);
+                msg.setMessage(UU_STR);
                 String message = JSON.encode(msg);
                 WebSocketManager.send(message);
-                setMessage(UU_TEXT, Color.BLUE);
+                setMessage(UU_TEXT, Color.GREEN);
             }
         });
 
@@ -79,11 +82,10 @@ public class WebCommandActivity extends AccessoryBaseActivity {
         nyaaBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "gatt button clecked");
                 Msg msg = new Msg();
                 msg.setCommand("");
                 msg.setSender("android");
-                msg.setMessage(NYAA_TEXT);
+                msg.setMessage(NYAA_STR);
                 String message = JSON.encode(msg);
                 WebSocketManager.send(message);
                 setMessage(NYAA_TEXT, Color.GREEN);
@@ -140,12 +142,11 @@ public class WebCommandActivity extends AccessoryBaseActivity {
                 Log.d(TAG, "websocket message");
                 String str = message.getText();
                 Msg msg = JSON.decode(str, Msg.class);
-
                 if (msg.getCommand().equals("")) {
-                    if (UU_TEXT.equals(str)) {
+                    if (UU_STR.equals(msg.getMessage())) {
                         setMessage(UU_TEXT, Color.RED);
-                    } else if (NYAA_TEXT.equals(str)) {
-                        setMessage(NYAA_TEXT, Color.YELLOW);
+                    } else if (NYAA_STR.equals(msg.getMessage())) {
+                        setMessage(NYAA_TEXT, Color.RED);
                     } else {
                         setMessage(str, Color.BLUE);
                     }
@@ -153,7 +154,7 @@ public class WebCommandActivity extends AccessoryBaseActivity {
                     // Map呼び出し
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse(str + "?z=13"));
+                    intent.setData(Uri.parse("geo:" + msg.getLat() + "," + msg.getLon() + "?z=13"));
                     startActivity(intent);
                 } else if (msg.getCommand().equals("http")) {
                     // Browser呼び出し
