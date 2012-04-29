@@ -1,29 +1,14 @@
 /**
- * Created by JetBrains WebStorm.
+ * Created with JetBrains WebStorm.
  * User: tomo
- * Date: 12/04/14
- * Time: 17:19
+ * Date: 12/04/29
+ * Time: 21:23
  * To change this template use File | Settings | File Templates.
  */
 
-// WebSocket Commander
-var wsCommander;
-
-// Create the div used to show the dynamically generated color
-function createColorBox() {
-    wsCommander.createColorBox();
-}
-
 $(function(){
     // WebSocket
-    var ws = new WebSocket('ws://192.168.110.195:8001/');
-
-    var imgList = ["slider-disabled.png", "slider-disabled-1.png", "slider.png", "slider-1.png"];
-    var preloadImg = []
-    for(var i = 0, imgSrc; imgSrc = imgList[i]; i++) {
-        preloadImg[i] = new Image();
-        preloadImg[i].src = "image/" + imgSrc;
-    };
+    var ws = new WebSocket('ws://192.168.1.3:8001/');
     var led_state = false;
 
     $('#chime').click(function() {
@@ -47,48 +32,6 @@ $(function(){
         ws.send(JSON.stringify(msg));
     });
 
-    // Convert and rgb value to hex
-    toHex = function(N) {
-        if (N==null) return "00";
-        N=parseInt(N);
-        if (N==0 || isNaN(N)) return "00";
-        N=Math.max(0,N); N=Math.min(N,255);
-        N=Math.round(N);
-        return "0123456789ABCDEF".charAt((N-N%16)/16) + "0123456789ABCDEF".charAt(N%16);
-    }
-
-    // Update Color
-    updateColor = function() {
-        var r = parseInt($('#slider-r').val(), 10) || 0;
-        var g = parseInt($('#slider-g').val(), 10) || 0;
-        var b = parseInt($('#slider-b').val(), 10) || 0;
-
-        $('#colorBox').css("background-color","rgb("+r+ ","+g+","+b+")");
-        $('#hexValue').html('#' + toHex(r) + toHex(g) + toHex(b));
-
-        var msg = {
-            'sender': 'browser',
-            'command': 'light',
-            'red': 0,
-            'green': 0,
-            'blue': 0
-        }
-        msg.red = r;
-        msg.green = g;
-        msg.blue = b;
-        console.log(JSON.stringify(msg));
-        ws.send(JSON.stringify(msg));
-    }
-
-    // Update color from webSocket
-    updateColorFromWs = function(red, green, blue) {
-        $('#slider-r').attr('value', red);
-        $('#slider-g').attr('value', green);
-        $('#slider-b').attr('value', blue);
-        $('#colorBox').css("background-color","rgb(" + red + "," + green + "," + blue + ")");
-        $('#hexValue').html('#' + toHex(red) + toHex(green) + toHex(blue));
-    }
-
     // Message from Server
     ws.onmessage = function (event) {
         var receive_message = JSON.parse(event.data);
@@ -101,7 +44,12 @@ $(function(){
                 document.location = map;
                 break;
             case 'light':
-                updateColorFromWs(receive_message.red, receive_message.green, receive_message.blue);
+                $('.jquery-ui-slider-red-value').val(receive_message.red);
+                $('.jquery-ui-slider-green-value').val(receive_message.green);
+                $('.jquery-ui-slider-blue-value').val(receive_message.blue);
+                $('#jquery-ui-slider-red').slider('value', receive_message.red);
+                $('#jquery-ui-slider-green').slider('value', receive_message.green);
+                $('#jquery-ui-slider-blue').slider('value', receive_message.blue);
                 break;
         }
 
@@ -124,26 +72,43 @@ $(function(){
         }
     }
 
-    // 外部公開
-    wsCommander = {
-
-        // Create the div used to show the dynamically generated color
-        createColorBox: function() {
-            var dl = document.getElementsByTagName('dl')[0];
-            var box  = document.createElement('div');
-            box.setAttribute('id','colorBox');
-            var res  = document.createElement('div');
-            res.setAttribute('id','hexValue');
-
-            dl.parentNode.insertBefore(res, dl.nextSibling);
-            dl.parentNode.insertBefore(box, res);
-            updateColor();
-
-            // Clean up for poor old IE
-            res = box = null;
+    jQuery(function() {
+        var msg = {
+            'sender': 'browser',
+            'command': 'light',
+            'red': 0,
+            'green': 0,
+            'blue': 0
         }
-    }
-});
 
-// Demo specific onload events (uses the addEvent method bundled with the slider)
-fdSliderController.addEvent(window, 'load', createColorBox);
+        jQuery('#jquery-ui-slider > div > .jquery-ui-slider-multi').each(function() {
+
+            var value = parseInt(jQuery(this).text(),10);
+            var inputValue = '.' + jQuery(this).attr('id') + '-value';
+            jQuery(this).empty().slider( {
+                value: value,
+                range: 'min',
+                min: 0,
+                max: 255,
+                animate: true,
+                slide: function( event, ui ) {
+                    jQuery(inputValue).val(ui.value);
+                    jQuery(inputValue).html(ui.value);
+
+                    if (inputValue === '.jquery-ui-slider-red-value') {
+                        msg.red = ui.value;
+                    } else if (inputValue === '.jquery-ui-slider-green-value') {
+                        msg.green = ui.value;
+                    } else {
+                        msg.blue = ui.value;
+                    }
+
+                    console.log(JSON.stringify(msg));
+                    ws.send(JSON.stringify(msg));
+                }
+            } );
+            jQuery(inputValue).val(jQuery(this).slider('value'));
+            jQuery(inputValue).html(jQuery(this).slider('value'));
+        } );
+    } );
+});
