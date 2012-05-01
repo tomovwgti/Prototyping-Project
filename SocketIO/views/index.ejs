@@ -20,7 +20,7 @@ socket.on('message', function(msg) {
 function SendMsg() {
     var msg = $('#message').val();
     // メッセージを送信する
-	 socket.emit('message', { value: msg });
+    socket.emit('message', { value: msg });
     $('#message').val('');
 }
 
