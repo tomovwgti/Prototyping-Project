@@ -8,7 +8,7 @@
 
 $(function(){
     // WebSocket
-    var ws = new WebSocket('ws://192.168.1.3:8001/');
+    var ws = new WebSocket('ws://192.168.110.195:8001/');
     var led_state = false;
 
     $('#chime').click(function() {
@@ -72,7 +72,7 @@ $(function(){
         }
     }
 
-    jQuery(function() {
+    $(function() {
         var msg = {
             'sender': 'browser',
             'command': 'light',
@@ -81,19 +81,19 @@ $(function(){
             'blue': 0
         }
 
-        jQuery('#jquery-ui-slider > div > .jquery-ui-slider-multi').each(function() {
+        $('#jquery-ui-slider > div > .jquery-ui-slider-multi').each(function() {
 
-            var value = parseInt(jQuery(this).text(),10);
-            var inputValue = '.' + jQuery(this).attr('id') + '-value';
-            jQuery(this).empty().slider( {
+            var value = parseInt($(this).text(),10);
+            var inputValue = '.' + $(this).attr('id') + '-value';
+            $(this).empty().slider( {
                 value: value,
                 range: 'min',
                 min: 0,
                 max: 255,
                 animate: true,
                 slide: function( event, ui ) {
-                    jQuery(inputValue).val(ui.value);
-                    jQuery(inputValue).html(ui.value);
+                    $(inputValue).val(ui.value);
+                    $(inputValue).html(ui.value);
 
                     if (inputValue === '.jquery-ui-slider-red-value') {
                         msg.red = ui.value;
@@ -107,8 +107,8 @@ $(function(){
                     ws.send(JSON.stringify(msg));
                 }
             } );
-            jQuery(inputValue).val(jQuery(this).slider('value'));
-            jQuery(inputValue).html(jQuery(this).slider('value'));
+            $(inputValue).val($(this).slider('value'));
+            $(inputValue).html($(this).slider('value'));
         } );
     } );
 });
