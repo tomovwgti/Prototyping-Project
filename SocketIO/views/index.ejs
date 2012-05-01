@@ -2,7 +2,7 @@
 <script src="/socket.io/socket.io.js"></script>
 <script type="text/javascript">
 
-var socket = io.connect('http://localhost:3000');
+var socket = io.connect();
 
 socket.on('connect', function(msg) {
     console.log("connet");
@@ -19,15 +19,15 @@ socket.on('message', function(msg) {
 // メッセージを送る
 function SendMsg() {
     var msg = $('#message').val();
-    // メッセージを発射する
-    socket.emit('message', { value: msg });
+    // メッセージを送信する
+	 socket.emit('message', { value: msg });
     $('#message').val('');
 }
 
 // 切断する
 function DisConnect() {
     var msg = socket.socket.transport.sessid + "は切断しました。";
-    // メッセージを発射する
+    // メッセージを送信する
     socket.emit('message', { value: msg });
     // socketを切断する
     socket.disconnect();
