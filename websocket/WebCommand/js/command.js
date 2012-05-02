@@ -97,9 +97,15 @@ $(function(){
 
                     if (inputValue === '.jquery-ui-slider-red-value') {
                         msg.red = ui.value;
+                        msg.green = $('.jquery-ui-slider-green-value').val();
+                        msg.blue = $('.jquery-ui-slider-blue-value').val();
                     } else if (inputValue === '.jquery-ui-slider-green-value') {
+                        msg.red = $('.jquery-ui-slider-red-value').val();
                         msg.green = ui.value;
+                        msg.blue = $('.jquery-ui-slider-blue-value').val();
                     } else {
+                        msg.red = $('.jquery-ui-slider-red-value').val();
+                        msg.green = $('.jquery-ui-slider-green-value').val();
                         msg.blue = ui.value;
                     }
 
