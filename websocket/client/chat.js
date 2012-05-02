@@ -42,11 +42,11 @@
         switch (receive_message.message) {
             // （」・ω・）」うー！
             case 'uu':
-                $('body').append('<li> （」・ω・）」うー！ </li>');
+                $('body').append('<div> （」・ω・）」うー！ </div>');
                 break;
             // （／・ω・）／にゃー！
             case 'nyaa':
-                $('body').append('<li> （／・ω・）／にゃー！ </li>');
+                $('body').append('<div> （／・ω・）／にゃー！ </div>');
                 break;
         }
     }
