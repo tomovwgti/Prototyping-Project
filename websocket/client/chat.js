@@ -9,27 +9,45 @@
 (function (global) {
     // WebSocket
     var ws = new WebSocket('ws://192.168.110.195:8001/');
+    var msg = {
+        'sender': 'browser',
+        'command': '',
+        'message': ''
+    }
 
     // サーバに送信
     $(this).keydown(function (key) {
         if (key.keyCode === 13) {
-            var send_message = $('#send').val();
-            console.log('send message --> ' + send_message);
-            ws.send(send_message);
+            msg.message = $('#send').val();
+            console.log('send message --> ' + JSON.stringify(msg));
+            ws.send(JSON.stringify(msg));
             $('#send').val('');
         }
     });
 
     // サーバから受信
     ws.onmessage = function (event) {
-        var receive_message = event.data;
-        console.log('receive message <-- ' + receive_message);
-        $('body').append('<li>' + receive_message + '</li>');
-        // 受信文字列のスキーマを取得してgeoなら地図を開く
-        var schema = $.url(receive_message).attr('protocol');
-        if (-1 != schema.indexOf('geo')) {
-            var map = 'http://maps.google.co.jp/?ie=UTF8&ll=' + $.url(receive_message).attr('host') + '&z=13';
-            document.location = map;
+        var receive_message = JSON.parse(event.data);
+        console.log('receive message <-- ' + event.data);
+
+        // Command
+        switch (receive_message.command) {
+            case 'geo':
+                var map = 'http://maps.google.co.jp/?ie=UTF8&ll=' + receive_message.lat +',' + receive_message.lon + '&z=13'
+                document.location = map;
+                break;
+        }
+
+        // Message
+        switch (receive_message.message) {
+            // （」・ω・）」うー！
+            case 'uu':
+                $('body').append('<li> （」・ω・）」うー！ </li>');
+                break;
+            // （／・ω・）／にゃー！
+            case 'nyaa':
+                $('body').append('<li> （／・ω・）／にゃー！ </li>');
+                break;
         }
     }
 }(this));
