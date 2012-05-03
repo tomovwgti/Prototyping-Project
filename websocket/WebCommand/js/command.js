@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-$(function (glabal){
+$(function () {
     // WebSocket
     var ws = new WebSocket('ws://192.168.110.195:8001/');
     var led_state = false;
@@ -117,4 +117,4 @@ $(function (glabal){
             $(inputValue).html($(this).slider('value'));
         } );
     } );
-}(this));
+});
