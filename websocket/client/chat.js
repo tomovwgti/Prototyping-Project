@@ -11,7 +11,7 @@
     var ws = new WebSocket('ws://192.168.110.195:8001/');
     var msg = {
         'sender': 'browser',
-        'command': '',
+        'command': 'Message',
         'message': ''
     }
 
