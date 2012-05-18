@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.tomovwgti.android.accessory.AccessoryBaseActivity;
+import com.tomovwgti.json.Geo;
 import com.tomovwgti.json.Msg;
 
 import de.roderick.weberknecht.WebSocketEventHandler;
@@ -100,8 +101,10 @@ public class WebCommandActivity extends AccessoryBaseActivity {
                 Msg msg = new Msg();
                 msg.setCommand("geo");
                 msg.setSender("android");
-                msg.setLat("36.744386");
-                msg.setLon("139.457703");
+                Geo geo = new Geo();
+                geo.setLat("36.744386");
+                geo.setLon("139.457703");
+                msg.setGeo(geo);
                 String message = JSON.encode(msg);
                 WebSocketManager.send(message);
                 setMessage(message, Color.GREEN);
@@ -154,7 +157,8 @@ public class WebCommandActivity extends AccessoryBaseActivity {
                     // Map呼び出し
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse("geo:" + msg.getLat() + "," + msg.getLon() + "?z=13"));
+                    intent.setData(Uri.parse("geo:" + msg.getGeo().getLat() + ","
+                            + msg.getGeo().getLon() + "?z=13"));
                     startActivity(intent);
                 } else if (msg.getCommand().equals("http")) {
                     // Browser呼び出し
@@ -190,9 +194,9 @@ public class WebCommandActivity extends AccessoryBaseActivity {
     private void executeLight(Msg msg) {
         // ADKへ出力
         LedLight light = new LedLight();
-        light.red = contains(msg.getRed());
-        light.green = contains(msg.getGreen());
-        light.blue = contains(msg.getBlue());
+        light.red = contains(msg.getLight().getRed());
+        light.green = contains(msg.getLight().getGreen());
+        light.blue = contains(msg.getLight().getBlue());
         light.sendData();
     }
 
@@ -201,7 +205,7 @@ public class WebCommandActivity extends AccessoryBaseActivity {
      */
     private void executeLed(Msg msg) {
         Led led = new Led();
-        if (msg.isStatus() == false) {
+        if (msg.getLed().isStatus() == false) {
             led.light = 0;
         } else {
             led.light = 1;
