@@ -20,8 +20,8 @@ import android.media.SoundPool;
 import android.view.View;
 
 import com.tomovwgti.android.accessory.AccessoryBaseActivity;
-import com.tomovwgti.android.accessory.io.ADKCommandAbstractReciever;
-import com.tomovwgti.android.accessory.io.ADKCommandReciever;
+import com.tomovwgti.android.accessory.io.ADKCommandAbstractReceiver;
+import com.tomovwgti.android.accessory.io.ADKCommandReceiver;
 
 public class VoteActivity extends AccessoryBaseActivity {
     private static final String TAG = VoteActivity.class.getSimpleName();
@@ -31,8 +31,8 @@ public class VoteActivity extends AccessoryBaseActivity {
     private int mId;
 
     @Override
-    protected ADKCommandAbstractReciever createReciever() {
-        return new ADKCommandReciever(this);
+    protected ADKCommandAbstractReceiver createReceiver() {
+        return new ADKCommandReceiver(this);
     }
 
     /**

@@ -22,7 +22,7 @@ public class ChimeActivity extends AccessoryBaseActivity {
     }
 
     @Override
-    protected ADKCommandAbstractReceiver createReciever() {
+    protected ADKCommandAbstractReceiver createReceiver() {
         return new ADKCommandReceiver(this);
     }
 
