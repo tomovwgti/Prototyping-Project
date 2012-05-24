@@ -47,8 +47,12 @@ io.sockets.on('connection', function(socket) {
     console.log("connection");
     // メッセージを受けたときの処理
     socket.on('message', function(data) {
+        var msg = {
+            value : ''
+        }
+        msg.value = data.value;
         // つながっているクライアント全員に送信
-        io.sockets.emit('message', { value: data.value });
+        io.sockets.emit('message',msg);
     });
 
     // クライアントが切断したときの処理
