@@ -9,7 +9,7 @@ import com.tomovwgti.android.accessory.io.ADKCommandAbstractReceiver;
 import com.tomovwgti.android.accessory.io.ADKCommandReciever;
 
 public class ScrollMapsActivity extends AccessoryBaseActivity {
-    private static final String TAG = ScrollMapsActivity.class.getSimpleName();
+    static final String TAG = ScrollMapsActivity.class.getSimpleName();
 
     private String URL = "http://dl.dropbox.com/u/589955/MapSample.html";
     private WebView mWebView;

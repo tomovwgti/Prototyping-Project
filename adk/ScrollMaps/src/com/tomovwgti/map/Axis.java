@@ -6,7 +6,7 @@ import android.app.Activity;
 import com.tomovwgti.android.accessory.io.InputDataListener;
 
 public class Axis implements InputDataListener {
-    private static final String TAG = Axis.class.getSimpleName();
+    static final String TAG = Axis.class.getSimpleName();
 
     private final ScrollMapsActivity mActivity;
     public static final byte TYPE_AXIS = 0x07;
