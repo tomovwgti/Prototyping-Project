@@ -18,7 +18,7 @@ import com.tomovwgti.android.accessory.io.OutputData;
 
 public class LedLight extends OutputData {
 
-    private static final String TAG = LedLight.class.getSimpleName();
+    static final String TAG = LedLight.class.getSimpleName();
 
     // ADK device command
     private static final byte LED_COMMAND = 2;

@@ -17,7 +17,7 @@ import com.tomovwgti.weather.WeatherOnlineLoader.Weather;
 import com.worldweatheronline.json.JsonObj;
 
 public class WeatherOnlineLoader extends AsyncTask<String, Void, Weather> {
-    private static final String TAG = WeatherOnlineLoader.class.getSimpleName();
+    static final String TAG = WeatherOnlineLoader.class.getSimpleName();
 
     public interface WeatherOnlineListener {
         public void viewResult(String temp, String weather, String imageUrl);

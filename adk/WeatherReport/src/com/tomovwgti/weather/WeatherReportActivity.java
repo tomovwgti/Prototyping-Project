@@ -18,7 +18,7 @@ import com.tomovwgti.weather.WeatherOnlineLoader.WeatherOnlineListener;
 
 public class WeatherReportActivity extends AccessoryBaseActivity implements WeatherOnlineListener,
         PlaceListener, LocationListener {
-    private final static String TAG = WeatherReportActivity.class.getSimpleName();
+    final static String TAG = WeatherReportActivity.class.getSimpleName();
 
     private LocationManager mLocationManager;
     private WeatherOnlineLoader mWeatherLoader;

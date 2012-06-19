@@ -15,7 +15,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 
 public class PlaceLoader extends AsyncTask<String, Void, String> {
-    private static final String TAG = PlaceLoader.class.getSimpleName();
+    static final String TAG = PlaceLoader.class.getSimpleName();
 
     private static final String KEY = "m1rDqkWxg64db3KhqLdIXxJaALj0tKKzuaPitulv01AXaX_0ov_qzh5jzVdkBlA-";
     private static final String TARGET_URL = "reverse.search.olp.yahooapis.jp";

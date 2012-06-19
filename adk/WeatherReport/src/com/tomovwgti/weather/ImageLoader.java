@@ -12,7 +12,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 
 public class ImageLoader extends AsyncTask<String, Void, Bitmap> {
-    private final static String TAG = ImageLoader.class.getSimpleName();
+    final static String TAG = ImageLoader.class.getSimpleName();
 
     public interface ImageListener {
         public void viewResult(Bitmap image);
