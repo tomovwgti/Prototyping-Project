@@ -48,6 +48,8 @@
             case 'nyaa':
                 $('body').append('<div> （／・ω・）／にゃー！ </div>');
                 break;
+            default:
+                $('body').append('<div>' + receive_message.message + '</div>');
         }
     }
 }(this));
