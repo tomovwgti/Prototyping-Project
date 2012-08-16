@@ -7,14 +7,14 @@ import net.arnx.jsonic.JSON;
 
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
@@ -27,12 +27,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tomovwgti.android.accessory.AccessoryBaseActivity;
 import com.tomovwgti.json.Geo;
 import com.tomovwgti.json.Msg;
 import com.tomovwgti.json.Value;
 
-public class MainActivity extends Activity {
-    static final String TAG = MainActivity.class.getSimpleName();
+public class WebCommandActivity extends AccessoryBaseActivity {
+    static final String TAG = WebCommandActivity.class.getSimpleName();
 
     private static final String UU_STR = "uu";
     private static final String NYAA_STR = "nyaa";
@@ -46,6 +47,8 @@ public class MainActivity extends Activity {
     private AlertDialog mAlertDialog;
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
+    private SoundPool mSp;
+    private int mId;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -53,11 +56,12 @@ public class MainActivity extends Activity {
             switch (msg.what) {
                 case SocketIOManager.SOCKETIO_DISCONNECT:
                     Log.i(TAG, "SOCKETIO_DISCONNECT");
-                    Toast.makeText(MainActivity.this, "Disconnect", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(WebCommandActivity.this, "Disconnect", Toast.LENGTH_SHORT)
+                            .show();
                     break;
                 case SocketIOManager.SOCKETIO_CONNECT:
                     Log.i(TAG, "SOCKETIO_CONNECT");
-                    Toast.makeText(MainActivity.this, "Connect", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(WebCommandActivity.this, "Connect", Toast.LENGTH_SHORT).show();
                     break;
                 case SocketIOManager.SOCKETIO_HERTBEAT:
                     Log.i(TAG, "SOCKETIO_HERTBEAT");
@@ -84,11 +88,21 @@ public class MainActivity extends Activity {
     };
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void showControls() {
         setContentView(R.layout.message);
 
         mSocketManager = new SocketIOManager(mHandler);
+
+        pref = PreferenceManager.getDefaultSharedPreferences(this);
+        editor = pref.edit();
+
+        // IPアドレス確認ダイアログ
+        mAlertDialog = showAlertDialog();
+        mAlertDialog.show();
+
+        // チャイム音準備
+        mSp = new SoundPool(1, AudioManager.STREAM_RING, 0);
+        mId = mSp.load(this, R.raw.chime, 1);
 
         // うーボタン押下時の挙動
         Button uuBtn = (Button) findViewById(R.id.btn_uu_btn);
@@ -99,7 +113,6 @@ public class MainActivity extends Activity {
                 Msg msg = new Msg();
                 msg.setCommand("");
                 msg.setSender("android");
-                msg.setCommand("Message");
                 msg.setMessage(UU_STR);
                 value.setValue(msg);
                 String message = JSON.encode(value);
@@ -122,7 +135,6 @@ public class MainActivity extends Activity {
                 Msg msg = new Msg();
                 msg.setCommand("");
                 msg.setSender("android");
-                msg.setCommand("Message");
                 msg.setMessage(NYAA_STR);
                 value.setValue(msg);
                 String message = JSON.encode(value);
@@ -144,7 +156,6 @@ public class MainActivity extends Activity {
                 Value value = new Value();
                 Msg msg = new Msg();
                 msg.setCommand("geo");
-                msg.setMessage("Map");
                 msg.setSender("android");
                 Geo geo = new Geo();
                 geo.setLat("36.744386");
@@ -158,15 +169,21 @@ public class MainActivity extends Activity {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
+                setMessage(message, Color.GREEN);
             }
         });
+    }
 
-        pref = PreferenceManager.getDefaultSharedPreferences(this);
-        editor = pref.edit();
-
-        // IPアドレス確認ダイアログ
-        mAlertDialog = showAlertDialog();
-        mAlertDialog.show();
+    private void setMessage(final String message, final int color) {
+        // WebSocketHandlerのonMessageは別スレッドなのでhandlerを用いてviewの書き換えを行う
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                TextView messageArea = (TextView) findViewById(R.id.message_area);
+                messageArea.setText(message);
+                messageArea.setTextColor(color);
+            }
+        });
     }
 
     @Override
@@ -197,22 +214,62 @@ public class MainActivity extends Activity {
             intent.setAction(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(msg.getMessage()));
             startActivity(intent);
+        } else if (msg.getCommand().equals("light")) {
+            // Fill Color LEDコントロール
+            executeLight(msg);
+        } else if (msg.getCommand().equals("led")) {
+            // LEDコントロール
+            executeLed(msg);
+        } else if (msg.getCommand().equals("chime")) {
+            // Chimeコントロール
+            executeChime(msg);
         } else {
             // それ以外
             setMessage(JSON.encode(msg), Color.GREEN);
         }
     }
 
-    private void setMessage(final String message, final int color) {
-        // WebSocketHandlerのonMessageは別スレッドなのでhandlerを用いてviewの書き換えを行う
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                TextView messageArea = (TextView) findViewById(R.id.message_area);
-                messageArea.setText(message);
-                messageArea.setTextColor(color);
-            }
-        });
+    /**
+     * Lightコマンドを受けた時の処理
+     */
+    private void executeLight(Msg msg) {
+        // ADKへ出力
+        LedLight light = new LedLight();
+        light.red = contains(msg.getLight().getRed());
+        light.green = contains(msg.getLight().getGreen());
+        light.blue = contains(msg.getLight().getBlue());
+        light.sendData();
+    }
+
+    /**
+     * LEDコマンドを受けた時の処理
+     */
+    private void executeLed(Msg msg) {
+        Led led = new Led();
+        if (msg.getLed().isStatus() == false) {
+            led.light = 0;
+        } else {
+            led.light = 1;
+        }
+        led.sendData();
+    }
+
+    /**
+     * CHIMEコマンドを受けた時の処理
+     */
+    private void executeChime(Msg msg) {
+        // Androidで音を鳴らす
+        mSp.play(mId, 1.0F, 1.0F, 0, 0, 1.0F);
+        setMessage("!(^o^)!", Color.YELLOW);
+    }
+
+    private int contains(int value) {
+        if (value < 0) {
+            return 0;
+        } else if (value > 255) {
+            return 255;
+        }
+        return value;
     }
 
     private AlertDialog showAlertDialog() {
