@@ -31,6 +31,8 @@ app.configure('production', function(){
 app.get('/', routes.index);
 // Chat Sample
 app.get('/chat', routes.chat);
+// Web Command
+app.get('/webcommand', routes.webcommand);
 
 // ソケットを作る
 var socketIO = require('socket.io');
@@ -45,6 +47,7 @@ io.sockets.on('connection', function(socket) {
         // 送信者以外にブロードキャスト
         console.log("message");
         socket.broadcast.emit('message', { value: data.value });
+//        io.sockets.emit('message', { value: data.value });
     });
 
     // クライアントが切断したときの処理
