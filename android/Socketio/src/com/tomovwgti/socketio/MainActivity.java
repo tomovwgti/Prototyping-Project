@@ -197,7 +197,7 @@ public class MainActivity extends Activity {
             startActivity(intent);
         } else {
             // それ以外
-            setMessage(msg.getMessage(), Color.GREEN);
+            setMessage(JSON.encode(msg), Color.GREEN);
         }
     }
 
