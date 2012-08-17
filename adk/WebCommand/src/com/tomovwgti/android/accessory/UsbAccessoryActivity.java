@@ -16,8 +16,7 @@ package com.tomovwgti.android.accessory;
 
 import android.content.Intent;
 
-import com.tomovwgti.android.accessory.UsbAccessoryAbstractActivity;
-import com.tomovwgti.webcommand.WebCommandActivity;
+import com.tomovwgti.socketio.WebCommandActivity;
 
 /* This Activity does nothing but receive USB_DEVICE_ATTACHED events from the
  * USB service and springboards to the main Gallery activity
