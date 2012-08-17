@@ -7,8 +7,8 @@ Protptype Project
 * Arduino : Arduinoアプリ
 * Node : Node.js学習用サンプルコード
 * sampleSockeIO : express, ejs, Socket.IOを使ったチャットサンプル
-* NodeServer : プロトタイプ作成用のサーバサイドとブラウザクライアント
- /chat と /webcommand のエントリポイント
+* NodeServer : プロトタイプ作成用のサーバサイドとブラウザクライアント(/chat と /webcommand のエントリポイント)
+
 ### 動作確認済みバージョン
 * Node.js : v0.8.7（nvm lsで確認可能）
 * Socket.IO : v0.9（SampleSocketIOおよびNodeServerのディレクトリでnpm listで確認可能）
