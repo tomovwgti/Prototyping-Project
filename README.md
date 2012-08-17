@@ -6,7 +6,7 @@ Protptype Project
 * forMegaAdkLib : adkを使うAndroidアプリのライブラリ
 * Arduino : Arduinoアプリ
 * Node : Node.js学習用サンプルコード
-* sampleSockeIO : express, ejs, Socket.IOを使ったチャットサンプル
+* SampleSockeIO : express, ejs, Socket.IOを使ったチャットサンプル
 * NodeServer : プロトタイプ作成用のサーバサイドとブラウザクライアント(/chat と /webcommand のエントリポイント)
 
 ### 動作確認済みバージョン
