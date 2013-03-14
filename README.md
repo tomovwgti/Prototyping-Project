@@ -1,6 +1,6 @@
 Protptype Project
 ================
-## developブランチOverview
+## Overview
 ### フォルダ構成
 * adk : ADKを利用するAndroidアプリ（ライブラリとしてforMegaAdkLibを指定する）
 * forMegaAdkLib : adkを使うAndroidアプリのライブラリ
