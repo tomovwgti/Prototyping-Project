@@ -36,8 +36,6 @@ app.configure('development', function(){
 
 app.get('/', routes.index);
 
-// ソケットを作る
-var socketIO = require('socket.io');
 // クライアントの接続を待つ(IPアドレスとポート番号を結びつけます)
 server.listen(3000);
 
@@ -48,6 +46,7 @@ io.sockets.on('connection', function(socket) {
     socket.on('message', function(data) {
         // つながっているクライアント全員に送信
         console.log("message");
+//        socket.broadcast.emit('message', { value: data.value });
         socket.broadcast.emit('message', { value: data.value });
     });
 
