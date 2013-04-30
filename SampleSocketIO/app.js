@@ -46,7 +46,6 @@ io.sockets.on('connection', function(socket) {
     socket.on('message', function(data) {
         // つながっているクライアント全員に送信
         console.log("message");
-//        socket.broadcast.emit('message', { value: data.value });
         socket.broadcast.emit('message', { value: data.value });
     });
 
