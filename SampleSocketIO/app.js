@@ -8,10 +8,10 @@
  */
 var express = require('express')
   , routes = require('./routes')
+  , http = require('http')
   , path = require('path');
 
 var app = express()
-    , http = require('http')
     , server = http.createServer(app)
     , io = require('socket.io').listen(server);
 
