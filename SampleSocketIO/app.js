@@ -8,7 +8,6 @@
  */
 var express = require('express')
   , routes = require('./routes')
-  , http = require('http')
   , path = require('path');
 
 var app = express()
@@ -37,7 +36,7 @@ app.configure('development', function(){
 app.get('/', routes.index);
 
 // クライアントの接続を待つ(IPアドレスとポート番号を結びつけます)
-server.listen(3000);
+server.listen(app.get('port'));
 
 // クライアントが接続してきたときの処理
 io.sockets.on('connection', function(socket) {
