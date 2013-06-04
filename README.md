@@ -21,12 +21,30 @@ Protptype Project
 #### nvm
 
 ```
-$ git clone https://github.com/creationix/nvm.git .nvm// .bashrcに以下を追加(Macの場合は.bash_profile)source ~/.nvm/nvm.sh
-// スクリプト実行$ source .nvm/nvm.sh// Node.jsをインストール$ nvm install v0.8.16$ nvm ls$ nvm use v0.8.16$ node --version
-```
+$ git clone https://github.com/creationix/nvm.git .nvm
+// .bashrcに以下を追加しておくとターミナル起動時にnvmが使える(Macの場合は.bash_profile)
+source ~/.nvm/nvm.sh
+// スクリプト実行
+$ source .nvm/nvm.sh
+// Node.jsをインストール
+$ nvm install v0.8.16
+$ nvm ls
+$ nvm use v0.8.16
+$ node --version
+
+```
 
 #### nodebrew
 ```
-$ curl https://raw.github.com/hokaccha/nodebrew/master/nodebrew | perl - setup// .bashrcに以下を追加(Macの場合は.bash_profile)export PATH=$HOME/.nodebrew/current/bin:$PATH// 読み直し$ source .bashrc// Node.jsをインストール$ nodebrew install-binary v0.8.16$ nodebrew ls$ nodebrew use v0.8.16$ node --version
+$ curl https://raw.github.com/hokaccha/nodebrew/master/nodebrew | perl - setup
+// .bashrcに以下を追加しておくと起動時にnodeが使える(Macの場合は.bash_profile)
+export PATH=$HOME/.nodebrew/current/bin:$PATH
+// 読み直し
+$ source .bashrc
+// Node.jsをインストール
+$ nodebrew install-binary v0.8.16
+$ nodebrew ls
+$ nodebrew use v0.8.16
+$ node --version
 ```
 
