@@ -16,3 +16,4 @@ var s = http.createServer(function(req, res) {
     res.end(urlinfo.query.a);
 });
 s.listen(8000);
+console.log('Server Started');
