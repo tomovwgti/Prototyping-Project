@@ -4,53 +4,68 @@ package com.tomovwgti.weather;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
+import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.LocationClient;
 import com.tomovwgti.android.accessory.AccessoryBaseActivity;
 import com.tomovwgti.weather.ImageLoader.ImageListener;
 import com.tomovwgti.weather.PlaceLoader.PlaceListener;
 import com.tomovwgti.weather.WeatherOnlineLoader.WeatherOnlineListener;
 
 public class WeatherReportActivity extends AccessoryBaseActivity implements WeatherOnlineListener,
-        PlaceListener, LocationListener {
+        PlaceListener, ConnectionCallbacks, OnConnectionFailedListener {
     final static String TAG = WeatherReportActivity.class.getSimpleName();
 
-    private LocationManager mLocationManager;
     private WeatherOnlineLoader mWeatherLoader;
     private PlaceLoader mPlaceLoader;
     private ProgressDialog mProgress;
 
+    private LocationClient mLocationClient;
+
     @Override
     protected void showControls() {
         setContentView(R.layout.main);
+        // check Google Play service APK is available and up to date.
+        // see http://developer.android.com/google/play-services/setup.html
+        final int result = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (result != ConnectionResult.SUCCESS) {
+            Toast.makeText(this, "Google Play service is not available (status=" + result + ")",
+                    Toast.LENGTH_LONG).show();
+            finish();
+        }
 
-        mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        mLocationClient = new LocationClient(this, this, this);
         mWeatherLoader = new WeatherOnlineLoader(this);
         mPlaceLoader = new PlaceLoader(this);
 
         mProgress = new ProgressDialog(this);
         mProgress.setMessage("情報取得中...");
+        mProgress.setCancelable(false);
         mProgress.show();
     }
 
     @Override
     protected void onResumeActivity() {
         Log.i(TAG, "Weather:onResume");
-        if (mLocationManager != null) {
-            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+        if (mLocationClient != null) {
+            Log.i(TAG, "Weather:connect");
+            mLocationClient.connect();
         }
     }
 
     @Override
     public void onPauseActivity() {
         Log.i(TAG, "Weather:onPause");
-        if (mLocationManager != null) {
-            mLocationManager.removeUpdates(this);
+        if (mLocationClient != null) {
+            mLocationClient.disconnect();
         }
         if (mProgress != null) {
             mProgress.dismiss();
@@ -114,41 +129,26 @@ public class WeatherReportActivity extends AccessoryBaseActivity implements Weat
     }
 
     @Override
-    public void onLocationChanged(Location location) {
-        mLocationManager.removeUpdates(this);
-        if (mLocationManager == null) {
-            // 位置取得キャンセル
-            return;
-        }
-        mLocationManager = null;
+    public void onConnected(Bundle connectionHint) {
+        Toast.makeText(this, "Connected", Toast.LENGTH_LONG).show();
 
-        String lat = String.valueOf(location.getLatitude());
-        String lon = String.valueOf(location.getLongitude());
+        Location loc = mLocationClient.getLastLocation();
+        Log.d("XXX", "location=" + loc.toString());
+
+        String lat = String.valueOf(loc.getLatitude());
+        String lon = String.valueOf(loc.getLongitude());
 
         // 天気情報
         mWeatherLoader.execute(lat, lon);
         // 位置情報取得
         mPlaceLoader.execute(lat, lon);
-
-        Log.v("----------", "----------");
-        Log.v("Latitude", String.valueOf(location.getLatitude()));
-        Log.v("Longitude", String.valueOf(location.getLongitude()));
-        Log.v("Accuracy", String.valueOf(location.getAccuracy()));
-        Log.v("Altitude", String.valueOf(location.getAltitude()));
-        Log.v("Time", String.valueOf(location.getTime()));
-        Log.v("Speed", String.valueOf(location.getSpeed()));
-        Log.v("Bearing", String.valueOf(location.getBearing()));
     }
 
     @Override
-    public void onProviderDisabled(String provider) {
+    public void onDisconnected() {
     }
 
     @Override
-    public void onProviderEnabled(String provider) {
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
+    public void onConnectionFailed(ConnectionResult result) {
     }
 }

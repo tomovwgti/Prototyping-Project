@@ -3,6 +3,7 @@ package com.tomovwgti.map;
 
 import android.util.Log;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.tomovwgti.android.accessory.AccessoryBaseActivity;
 import com.tomovwgti.android.accessory.io.ADKCommandAbstractReceiver;
@@ -11,7 +12,7 @@ import com.tomovwgti.android.accessory.io.ADKCommandReciever;
 public class ScrollMapsActivity extends AccessoryBaseActivity {
     static final String TAG = ScrollMapsActivity.class.getSimpleName();
 
-    private String URL = "http://dl.dropbox.com/u/589955/MapSample.html";
+    private String URL = "http://dl.dropboxusercontent.com/u/589955/MapSample.html";
     private WebView mWebView;
 
     /**
@@ -23,6 +24,7 @@ public class ScrollMapsActivity extends AccessoryBaseActivity {
 
         mWebView = (WebView) findViewById(R.id.webview);
         mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.setWebViewClient(new WebViewClient());
         mWebView.loadUrl(URL);
     }
 
